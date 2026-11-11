@@ -100,8 +100,7 @@ def main() -> None:
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("reset", reset))
     app.add_handler(CallbackQueryHandler(boton))
-    # Solo mensajes nuevos: si el cliente edita uno ya enviado, no se vuelve a procesar.
-    app.add_handler(MessageHandler(filters.UpdateType.MESSAGE & filters.TEXT & ~filters.COMMAND, mensaje))
+    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, mensaje))
     app.run_polling(allowed_updates=Update.ALL_TYPES)
 
 
