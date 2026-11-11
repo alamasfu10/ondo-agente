@@ -78,7 +78,9 @@ def construir_grafo(h, checkpointer=None):
         if intencion == "persona":
             return "escalar"
         if it == "no_entendido":
-            return "reparar"
+            # Si un flujo está esperando un dato, que repare él: sabe qué opciones volver a ofrecer.
+            en_flujo = intencion in FLUJOS and e.get("cliente") and e.get("pendiente")
+            return "flujo" if en_flujo else "reparar"
         if intencion in FLUJOS:
             return "flujo" if e.get("cliente") else "identificar"
         if intencion == "informacion":
