@@ -1,0 +1,272 @@
+[
+  {
+    "id": "C001",
+    "nombre": "Lucía Martín",
+    "email": "lucia.martin@example.com",
+    "telefono": "+34 600 000 001",
+    "ciudad": "Madrid",
+    "pais": "España",
+    "idioma": "es"
+  },
+  {
+    "id": "C002",
+    "nombre": "Javier Ortega",
+    "email": "javier.ortega@example.com",
+    "telefono": "+34 600 000 002",
+    "ciudad": "Madrid",
+    "pais": "España",
+    "idioma": "es"
+  },
+  {
+    "id": "C003",
+    "nombre": "Marta Ruiz",
+    "email": "marta.ruiz@example.com",
+    "telefono": "+34 600 000 003",
+    "ciudad": "Barcelona",
+    "pais": "España",
+    "idioma": "es"
+  },
+  {
+    "id": "C004",
+    "nombre": "Pau Ferrer",
+    "email": "pau.ferrer@example.com",
+    "telefono": "+34 600 000 004",
+    "ciudad": "Barcelona",
+    "pais": "España",
+    "idioma": "es"
+  },
+  {
+    "id": "C005",
+    "nombre": "Elena Navarro",
+    "email": "elena.navarro@example.com",
+    "telefono": "+34 600 000 005",
+    "ciudad": "Valencia",
+    "pais": "España",
+    "idioma": "es"
+  },
+  {
+    "id": "C006",
+    "nombre": "Sergio Blasco",
+    "email": "sergio.blasco@example.com",
+    "telefono": "+34 600 000 006",
+    "ciudad": "Valencia",
+    "pais": "España",
+    "idioma": "es"
+  },
+  {
+    "id": "C007",
+    "nombre": "Carmen Vidal",
+    "email": "carmen.vidal@example.com",
+    "telefono": "+34 600 000 007",
+    "ciudad": "Madrid",
+    "pais": "España",
+    "idioma": "es"
+  },
+  {
+    "id": "C008",
+    "nombre": "Andrés Molina",
+    "email": "andres.molina@example.com",
+    "telefono": "+34 600 000 008",
+    "ciudad": "Sevilla",
+    "pais": "España",
+    "idioma": "es"
+  },
+  {
+    "id": "C009",
+    "nombre": "Nerea Etxeberria",
+    "email": "nerea.etxeberria@example.com",
+    "telefono": "+34 600 000 009",
+    "ciudad": "Bilbao",
+    "pais": "España",
+    "idioma": "es"
+  },
+  {
+    "id": "C010",
+    "nombre": "Iván Castro",
+    "email": "ivan.castro@example.com",
+    "telefono": "+34 600 000 010",
+    "ciudad": "Zaragoza",
+    "pais": "España",
+    "idioma": "es"
+  },
+  {
+    "id": "C011",
+    "nombre": "Paula Gil",
+    "email": "paula.gil@example.com",
+    "telefono": "+34 600 000 011",
+    "ciudad": "Madrid",
+    "pais": "España",
+    "idioma": "es"
+  },
+  {
+    "id": "C012",
+    "nombre": "Diego Herrera",
+    "email": "diego.herrera@example.com",
+    "telefono": "+34 600 000 012",
+    "ciudad": "Barcelona",
+    "pais": "España",
+    "idioma": "es"
+  },
+  {
+    "id": "C013",
+    "nombre": "Laura Campos",
+    "email": "laura.campos@example.com",
+    "telefono": "+34 600 000 013",
+    "ciudad": "Valencia",
+    "pais": "España",
+    "idioma": "es"
+  },
+  {
+    "id": "C014",
+    "nombre": "Raúl Prieto",
+    "email": "raul.prieto@example.com",
+    "telefono": "+34 600 000 014",
+    "ciudad": "Madrid",
+    "pais": "España",
+    "idioma": "es"
+  },
+  {
+    "id": "C015",
+    "nombre": "Irene Soler",
+    "email": "irene.soler@example.com",
+    "telefono": "+34 600 000 015",
+    "ciudad": "Barcelona",
+    "pais": "España",
+    "idioma": "es"
+  },
+  {
+    "id": "C016",
+    "nombre": "Tomás Rey",
+    "email": "tomas.rey@example.com",
+    "telefono": "+34 600 000 016",
+    "ciudad": "Madrid",
+    "pais": "España",
+    "idioma": "es"
+  },
+  {
+    "id": "C017",
+    "nombre": "Claire Dubois",
+    "email": "claire.dubois@example.com",
+    "telefono": "+34 600 000 017",
+    "ciudad": "Lyon",
+    "pais": "Francia",
+    "idioma": "fr"
+  },
+  {
+    "id": "C018",
+    "nombre": "Julien Moreau",
+    "email": "julien.moreau@example.com",
+    "telefono": "+34 600 000 018",
+    "ciudad": "Lyon",
+    "pais": "Francia",
+    "idioma": "fr"
+  },
+  {
+    "id": "C019",
+    "nombre": "Giulia Rossi",
+    "email": "giulia.rossi@example.com",
+    "telefono": "+34 600 000 019",
+    "ciudad": "Milán",
+    "pais": "Italia",
+    "idioma": "it"
+  },
+  {
+    "id": "C020",
+    "nombre": "Marco Bianchi",
+    "email": "marco.bianchi@example.com",
+    "telefono": "+34 600 000 020",
+    "ciudad": "Milán",
+    "pais": "Italia",
+    "idioma": "it"
+  },
+  {
+    "id": "C021",
+    "nombre": "Inês Costa",
+    "email": "ines.costa@example.com",
+    "telefono": "+34 600 000 021",
+    "ciudad": "Lisboa",
+    "pais": "Portugal",
+    "idioma": "pt"
+  },
+  {
+    "id": "C022",
+    "nombre": "Rui Almeida",
+    "email": "rui.almeida@example.com",
+    "telefono": "+34 600 000 022",
+    "ciudad": "Lisboa",
+    "pais": "Portugal",
+    "idioma": "pt"
+  },
+  {
+    "id": "C023",
+    "nombre": "Emma Walsh",
+    "email": "emma.walsh@example.com",
+    "telefono": "+34 600 000 023",
+    "ciudad": "Barcelona",
+    "pais": "España",
+    "idioma": "en"
+  },
+  {
+    "id": "C024",
+    "nombre": "Oliver Grant",
+    "email": "oliver.grant@example.com",
+    "telefono": "+34 600 000 024",
+    "ciudad": "Madrid",
+    "pais": "España",
+    "idioma": "en"
+  },
+  {
+    "id": "C025",
+    "nombre": "Ana Lozano",
+    "email": "ana.lozano@example.com",
+    "telefono": "+34 600 000 025",
+    "ciudad": "Valencia",
+    "pais": "España",
+    "idioma": "es"
+  },
+  {
+    "id": "C026",
+    "nombre": "Hugo Serrano",
+    "email": "hugo.serrano@example.com",
+    "telefono": "+34 600 000 026",
+    "ciudad": "Madrid",
+    "pais": "España",
+    "idioma": "es"
+  },
+  {
+    "id": "C027",
+    "nombre": "Sara Iglesias",
+    "email": "sara.iglesias@example.com",
+    "telefono": "+34 600 000 027",
+    "ciudad": "Barcelona",
+    "pais": "España",
+    "idioma": "es"
+  },
+  {
+    "id": "C028",
+    "nombre": "Pablo Méndez",
+    "email": "pablo.mendez@example.com",
+    "telefono": "+34 600 000 028",
+    "ciudad": "Valencia",
+    "pais": "España",
+    "idioma": "es"
+  },
+  {
+    "id": "C029",
+    "nombre": "Noelia Pastor",
+    "email": "noelia.pastor@example.com",
+    "telefono": "+34 600 000 029",
+    "ciudad": "Madrid",
+    "pais": "España",
+    "idioma": "es"
+  },
+  {
+    "id": "C030",
+    "nombre": "Adrián Rubio",
+    "email": "adrian.rubio@example.com",
+    "telefono": "+34 600 000 030",
+    "ciudad": "Barcelona",
+    "pais": "España",
+    "idioma": "es"
+  }
+]

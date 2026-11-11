@@ -1,0 +1,981 @@
+[
+  {
+    "id": "OND-10231",
+    "cliente_id": "C001",
+    "estado": "enviado",
+    "lineas": [
+      {
+        "sku": "BRI-01",
+        "nombre": "Ondo Brisa",
+        "cantidad": 1,
+        "precio_unitario": 1290
+      },
+      {
+        "sku": "CAS-01",
+        "nombre": "Casco Ondo",
+        "cantidad": 1,
+        "precio_unitario": 89
+      }
+    ],
+    "total": 1379,
+    "hace_dias_pedido": 4,
+    "hace_dias_entrega": null,
+    "entrega_estimada_en_dias": 2,
+    "envio": {
+      "transportista": "GLS",
+      "seguimiento": "GLS871054694"
+    },
+    "incidencia": null
+  },
+  {
+    "id": "OND-10232",
+    "cliente_id": "C001",
+    "estado": "entregado",
+    "lineas": [
+      {
+        "sku": "CAN-01",
+        "nombre": "Candado en U",
+        "cantidad": 1,
+        "precio_unitario": 59
+      }
+    ],
+    "total": 59,
+    "hace_dias_pedido": 70,
+    "hace_dias_entrega": 64,
+    "entrega_estimada_en_dias": null,
+    "envio": {
+      "transportista": "GLS",
+      "seguimiento": "GLS235050114"
+    },
+    "incidencia": null
+  },
+  {
+    "id": "OND-10233",
+    "cliente_id": "C002",
+    "estado": "entregado",
+    "lineas": [
+      {
+        "sku": "RIA-01",
+        "nombre": "Ondo Ría",
+        "cantidad": 1,
+        "precio_unitario": 990
+      }
+    ],
+    "total": 990,
+    "hace_dias_pedido": 20,
+    "hace_dias_entrega": 12,
+    "entrega_estimada_en_dias": null,
+    "envio": {
+      "transportista": "GLS",
+      "seguimiento": "GLS434710499"
+    },
+    "incidencia": null
+  },
+  {
+    "id": "OND-10234",
+    "cliente_id": "C003",
+    "estado": "entregado",
+    "lineas": [
+      {
+        "sku": "TRA-01",
+        "nombre": "Ondo Trazo",
+        "cantidad": 1,
+        "precio_unitario": 2190
+      }
+    ],
+    "total": 2190,
+    "hace_dias_pedido": 55,
+    "hace_dias_entrega": 45,
+    "entrega_estimada_en_dias": null,
+    "envio": {
+      "transportista": "SEUR",
+      "seguimiento": "SEU798055767"
+    },
+    "incidencia": null
+  },
+  {
+    "id": "OND-10235",
+    "cliente_id": "C004",
+    "estado": "entregado",
+    "lineas": [
+      {
+        "sku": "CUM-01",
+        "nombre": "Ondo Cumbre",
+        "cantidad": 1,
+        "precio_unitario": 2890
+      },
+      {
+        "sku": "ALF-01",
+        "nombre": "Alforjas impermeables",
+        "cantidad": 1,
+        "precio_unitario": 69
+      }
+    ],
+    "total": 2959,
+    "hace_dias_pedido": 15,
+    "hace_dias_entrega": 9,
+    "entrega_estimada_en_dias": null,
+    "envio": {
+      "transportista": "GLS",
+      "seguimiento": "GLS470960629"
+    },
+    "incidencia": null
+  },
+  {
+    "id": "OND-10236",
+    "cliente_id": "C005",
+    "estado": "incidencia",
+    "lineas": [
+      {
+        "sku": "BAT-36",
+        "nombre": "Batería extra 36 V",
+        "cantidad": 1,
+        "precio_unitario": 490
+      }
+    ],
+    "total": 490,
+    "hace_dias_pedido": 9,
+    "hace_dias_entrega": null,
+    "entrega_estimada_en_dias": null,
+    "envio": {
+      "transportista": "DHL",
+      "seguimiento": "DHL494588762"
+    },
+    "incidencia": "dirección incompleta"
+  },
+  {
+    "id": "OND-10237",
+    "cliente_id": "C006",
+    "estado": "preparando",
+    "lineas": [
+      {
+        "sku": "CAR-01",
+        "nombre": "Ondo Carga",
+        "cantidad": 1,
+        "precio_unitario": 3450
+      }
+    ],
+    "total": 3450,
+    "hace_dias_pedido": 1,
+    "hace_dias_entrega": null,
+    "entrega_estimada_en_dias": 5,
+    "envio": null,
+    "incidencia": null
+  },
+  {
+    "id": "OND-10238",
+    "cliente_id": "C007",
+    "estado": "entregado",
+    "lineas": [
+      {
+        "sku": "BRI-01",
+        "nombre": "Ondo Brisa",
+        "cantidad": 1,
+        "precio_unitario": 1290
+      }
+    ],
+    "total": 1290,
+    "hace_dias_pedido": 120,
+    "hace_dias_entrega": 113,
+    "entrega_estimada_en_dias": null,
+    "envio": {
+      "transportista": "GLS",
+      "seguimiento": "GLS545384250"
+    },
+    "incidencia": null
+  },
+  {
+    "id": "OND-10239",
+    "cliente_id": "C008",
+    "estado": "enviado",
+    "lineas": [
+      {
+        "sku": "CRG-01",
+        "nombre": "Cargador rápido",
+        "cantidad": 1,
+        "precio_unitario": 79
+      },
+      {
+        "sku": "CAN-01",
+        "nombre": "Candado en U",
+        "cantidad": 1,
+        "precio_unitario": 59
+      }
+    ],
+    "total": 138,
+    "hace_dias_pedido": 3,
+    "hace_dias_entrega": null,
+    "entrega_estimada_en_dias": 3,
+    "envio": {
+      "transportista": "DHL",
+      "seguimiento": "DHL171176323"
+    },
+    "incidencia": null
+  },
+  {
+    "id": "OND-10240",
+    "cliente_id": "C009",
+    "estado": "entregado",
+    "lineas": [
+      {
+        "sku": "CAS-01",
+        "nombre": "Casco Ondo",
+        "cantidad": 2,
+        "precio_unitario": 89
+      }
+    ],
+    "total": 178,
+    "hace_dias_pedido": 25,
+    "hace_dias_entrega": 18,
+    "entrega_estimada_en_dias": null,
+    "envio": {
+      "transportista": "DHL",
+      "seguimiento": "DHL597990554"
+    },
+    "incidencia": null
+  },
+  {
+    "id": "OND-10241",
+    "cliente_id": "C010",
+    "estado": "devuelto",
+    "lineas": [
+      {
+        "sku": "RIA-01",
+        "nombre": "Ondo Ría",
+        "cantidad": 1,
+        "precio_unitario": 990
+      }
+    ],
+    "total": 990,
+    "hace_dias_pedido": 60,
+    "hace_dias_entrega": 52,
+    "entrega_estimada_en_dias": null,
+    "envio": {
+      "transportista": "SEUR",
+      "seguimiento": "SEU772665325"
+    },
+    "incidencia": null
+  },
+  {
+    "id": "OND-10242",
+    "cliente_id": "C027",
+    "estado": "preparando",
+    "lineas": [
+      {
+        "sku": "RIA-01",
+        "nombre": "Ondo Ría",
+        "cantidad": 1,
+        "precio_unitario": 990
+      },
+      {
+        "sku": "CAS-01",
+        "nombre": "Casco Ondo",
+        "cantidad": 1,
+        "precio_unitario": 89
+      }
+    ],
+    "total": 1079,
+    "hace_dias_pedido": 26,
+    "hace_dias_entrega": null,
+    "entrega_estimada_en_dias": 5,
+    "envio": null,
+    "incidencia": null
+  },
+  {
+    "id": "OND-10243",
+    "cliente_id": "C021",
+    "estado": "enviado",
+    "lineas": [
+      {
+        "sku": "ALF-01",
+        "nombre": "Alforjas impermeables",
+        "cantidad": 1,
+        "precio_unitario": 69
+      }
+    ],
+    "total": 69,
+    "hace_dias_pedido": 50,
+    "hace_dias_entrega": null,
+    "entrega_estimada_en_dias": 1,
+    "envio": {
+      "transportista": "Correos Express",
+      "seguimiento": "COR573983129"
+    },
+    "incidencia": null
+  },
+  {
+    "id": "OND-10244",
+    "cliente_id": "C025",
+    "estado": "enviado",
+    "lineas": [
+      {
+        "sku": "CUM-01",
+        "nombre": "Ondo Cumbre",
+        "cantidad": 1,
+        "precio_unitario": 2890
+      }
+    ],
+    "total": 2890,
+    "hace_dias_pedido": 40,
+    "hace_dias_entrega": null,
+    "entrega_estimada_en_dias": 2,
+    "envio": {
+      "transportista": "GLS",
+      "seguimiento": "GLS713046728"
+    },
+    "incidencia": null
+  },
+  {
+    "id": "OND-10245",
+    "cliente_id": "C017",
+    "estado": "entregado",
+    "lineas": [
+      {
+        "sku": "BAT-36",
+        "nombre": "Batería extra 36 V",
+        "cantidad": 1,
+        "precio_unitario": 490
+      }
+    ],
+    "total": 490,
+    "hace_dias_pedido": 85,
+    "hace_dias_entrega": 81,
+    "entrega_estimada_en_dias": null,
+    "envio": {
+      "transportista": "GLS",
+      "seguimiento": "GLS766369560"
+    },
+    "incidencia": null
+  },
+  {
+    "id": "OND-10246",
+    "cliente_id": "C028",
+    "estado": "entregado",
+    "lineas": [
+      {
+        "sku": "CUM-01",
+        "nombre": "Ondo Cumbre",
+        "cantidad": 1,
+        "precio_unitario": 2890
+      },
+      {
+        "sku": "CAS-01",
+        "nombre": "Casco Ondo",
+        "cantidad": 1,
+        "precio_unitario": 89
+      }
+    ],
+    "total": 2979,
+    "hace_dias_pedido": 21,
+    "hace_dias_entrega": 15,
+    "entrega_estimada_en_dias": null,
+    "envio": {
+      "transportista": "GLS",
+      "seguimiento": "GLS926652846"
+    },
+    "incidencia": null
+  },
+  {
+    "id": "OND-10247",
+    "cliente_id": "C016",
+    "estado": "preparando",
+    "lineas": [
+      {
+        "sku": "TRA-01",
+        "nombre": "Ondo Trazo",
+        "cantidad": 1,
+        "precio_unitario": 2190
+      },
+      {
+        "sku": "CAS-01",
+        "nombre": "Casco Ondo",
+        "cantidad": 1,
+        "precio_unitario": 89
+      }
+    ],
+    "total": 2279,
+    "hace_dias_pedido": 18,
+    "hace_dias_entrega": null,
+    "entrega_estimada_en_dias": 5,
+    "envio": null,
+    "incidencia": null
+  },
+  {
+    "id": "OND-10248",
+    "cliente_id": "C017",
+    "estado": "enviado",
+    "lineas": [
+      {
+        "sku": "ALF-01",
+        "nombre": "Alforjas impermeables",
+        "cantidad": 1,
+        "precio_unitario": 69
+      }
+    ],
+    "total": 69,
+    "hace_dias_pedido": 9,
+    "hace_dias_entrega": null,
+    "entrega_estimada_en_dias": 2,
+    "envio": {
+      "transportista": "GLS",
+      "seguimiento": "GLS416783163"
+    },
+    "incidencia": null
+  },
+  {
+    "id": "OND-10249",
+    "cliente_id": "C022",
+    "estado": "entregado",
+    "lineas": [
+      {
+        "sku": "RIA-01",
+        "nombre": "Ondo Ría",
+        "cantidad": 1,
+        "precio_unitario": 990
+      },
+      {
+        "sku": "BAT-36",
+        "nombre": "Batería extra 36 V",
+        "cantidad": 1,
+        "precio_unitario": 490
+      }
+    ],
+    "total": 1480,
+    "hace_dias_pedido": 56,
+    "hace_dias_entrega": 53,
+    "entrega_estimada_en_dias": null,
+    "envio": {
+      "transportista": "SEUR",
+      "seguimiento": "SEU808936472"
+    },
+    "incidencia": null
+  },
+  {
+    "id": "OND-10250",
+    "cliente_id": "C027",
+    "estado": "enviado",
+    "lineas": [
+      {
+        "sku": "BRI-01",
+        "nombre": "Ondo Brisa",
+        "cantidad": 1,
+        "precio_unitario": 1290
+      },
+      {
+        "sku": "CAN-01",
+        "nombre": "Candado en U",
+        "cantidad": 1,
+        "precio_unitario": 59
+      }
+    ],
+    "total": 1349,
+    "hace_dias_pedido": 12,
+    "hace_dias_entrega": null,
+    "entrega_estimada_en_dias": 1,
+    "envio": {
+      "transportista": "SEUR",
+      "seguimiento": "SEU794965117"
+    },
+    "incidencia": null
+  },
+  {
+    "id": "OND-10251",
+    "cliente_id": "C028",
+    "estado": "entregado",
+    "lineas": [
+      {
+        "sku": "CAR-01",
+        "nombre": "Ondo Carga",
+        "cantidad": 1,
+        "precio_unitario": 3450
+      },
+      {
+        "sku": "CAS-01",
+        "nombre": "Casco Ondo",
+        "cantidad": 1,
+        "precio_unitario": 89
+      }
+    ],
+    "total": 3539,
+    "hace_dias_pedido": 72,
+    "hace_dias_entrega": 65,
+    "entrega_estimada_en_dias": null,
+    "envio": {
+      "transportista": "SEUR",
+      "seguimiento": "SEU675809642"
+    },
+    "incidencia": null
+  },
+  {
+    "id": "OND-10252",
+    "cliente_id": "C018",
+    "estado": "entregado",
+    "lineas": [
+      {
+        "sku": "BRI-01",
+        "nombre": "Ondo Brisa",
+        "cantidad": 1,
+        "precio_unitario": 1290
+      },
+      {
+        "sku": "CAS-01",
+        "nombre": "Casco Ondo",
+        "cantidad": 1,
+        "precio_unitario": 89
+      }
+    ],
+    "total": 1379,
+    "hace_dias_pedido": 89,
+    "hace_dias_entrega": 81,
+    "entrega_estimada_en_dias": null,
+    "envio": {
+      "transportista": "SEUR",
+      "seguimiento": "SEU388630117"
+    },
+    "incidencia": null
+  },
+  {
+    "id": "OND-10253",
+    "cliente_id": "C020",
+    "estado": "entregado",
+    "lineas": [
+      {
+        "sku": "ALF-01",
+        "nombre": "Alforjas impermeables",
+        "cantidad": 1,
+        "precio_unitario": 69
+      }
+    ],
+    "total": 69,
+    "hace_dias_pedido": 75,
+    "hace_dias_entrega": 67,
+    "entrega_estimada_en_dias": null,
+    "envio": {
+      "transportista": "DHL",
+      "seguimiento": "DHL627493787"
+    },
+    "incidencia": null
+  },
+  {
+    "id": "OND-10254",
+    "cliente_id": "C014",
+    "estado": "preparando",
+    "lineas": [
+      {
+        "sku": "CAS-01",
+        "nombre": "Casco Ondo",
+        "cantidad": 1,
+        "precio_unitario": 89
+      }
+    ],
+    "total": 89,
+    "hace_dias_pedido": 60,
+    "hace_dias_entrega": null,
+    "entrega_estimada_en_dias": 5,
+    "envio": null,
+    "incidencia": null
+  },
+  {
+    "id": "OND-10255",
+    "cliente_id": "C025",
+    "estado": "enviado",
+    "lineas": [
+      {
+        "sku": "CUM-01",
+        "nombre": "Ondo Cumbre",
+        "cantidad": 1,
+        "precio_unitario": 2890
+      },
+      {
+        "sku": "CAS-01",
+        "nombre": "Casco Ondo",
+        "cantidad": 1,
+        "precio_unitario": 89
+      }
+    ],
+    "total": 2979,
+    "hace_dias_pedido": 85,
+    "hace_dias_entrega": null,
+    "entrega_estimada_en_dias": 2,
+    "envio": {
+      "transportista": "GLS",
+      "seguimiento": "GLS369731598"
+    },
+    "incidencia": null
+  },
+  {
+    "id": "OND-10256",
+    "cliente_id": "C016",
+    "estado": "entregado",
+    "lineas": [
+      {
+        "sku": "BRI-01",
+        "nombre": "Ondo Brisa",
+        "cantidad": 1,
+        "precio_unitario": 1290
+      },
+      {
+        "sku": "BAT-36",
+        "nombre": "Batería extra 36 V",
+        "cantidad": 1,
+        "precio_unitario": 490
+      }
+    ],
+    "total": 1780,
+    "hace_dias_pedido": 64,
+    "hace_dias_entrega": 58,
+    "entrega_estimada_en_dias": null,
+    "envio": {
+      "transportista": "SEUR",
+      "seguimiento": "SEU588087872"
+    },
+    "incidencia": null
+  },
+  {
+    "id": "OND-10257",
+    "cliente_id": "C018",
+    "estado": "entregado",
+    "lineas": [
+      {
+        "sku": "CUM-01",
+        "nombre": "Ondo Cumbre",
+        "cantidad": 1,
+        "precio_unitario": 2890
+      },
+      {
+        "sku": "ALF-01",
+        "nombre": "Alforjas impermeables",
+        "cantidad": 1,
+        "precio_unitario": 69
+      }
+    ],
+    "total": 2959,
+    "hace_dias_pedido": 25,
+    "hace_dias_entrega": 19,
+    "entrega_estimada_en_dias": null,
+    "envio": {
+      "transportista": "DHL",
+      "seguimiento": "DHL265330357"
+    },
+    "incidencia": null
+  },
+  {
+    "id": "OND-10258",
+    "cliente_id": "C016",
+    "estado": "entregado",
+    "lineas": [
+      {
+        "sku": "BRI-01",
+        "nombre": "Ondo Brisa",
+        "cantidad": 1,
+        "precio_unitario": 1290
+      },
+      {
+        "sku": "CAN-01",
+        "nombre": "Candado en U",
+        "cantidad": 1,
+        "precio_unitario": 59
+      }
+    ],
+    "total": 1349,
+    "hace_dias_pedido": 71,
+    "hace_dias_entrega": 68,
+    "entrega_estimada_en_dias": null,
+    "envio": {
+      "transportista": "DHL",
+      "seguimiento": "DHL297334983"
+    },
+    "incidencia": null
+  },
+  {
+    "id": "OND-10259",
+    "cliente_id": "C019",
+    "estado": "enviado",
+    "lineas": [
+      {
+        "sku": "ALF-01",
+        "nombre": "Alforjas impermeables",
+        "cantidad": 1,
+        "precio_unitario": 69
+      }
+    ],
+    "total": 69,
+    "hace_dias_pedido": 73,
+    "hace_dias_entrega": null,
+    "entrega_estimada_en_dias": 2,
+    "envio": {
+      "transportista": "DHL",
+      "seguimiento": "DHL558809370"
+    },
+    "incidencia": null
+  },
+  {
+    "id": "OND-10260",
+    "cliente_id": "C015",
+    "estado": "entregado",
+    "lineas": [
+      {
+        "sku": "RIA-01",
+        "nombre": "Ondo Ría",
+        "cantidad": 1,
+        "precio_unitario": 990
+      },
+      {
+        "sku": "CRG-01",
+        "nombre": "Cargador rápido",
+        "cantidad": 1,
+        "precio_unitario": 79
+      }
+    ],
+    "total": 1069,
+    "hace_dias_pedido": 12,
+    "hace_dias_entrega": 6,
+    "entrega_estimada_en_dias": null,
+    "envio": {
+      "transportista": "SEUR",
+      "seguimiento": "SEU852102087"
+    },
+    "incidencia": null
+  },
+  {
+    "id": "OND-10261",
+    "cliente_id": "C029",
+    "estado": "preparando",
+    "lineas": [
+      {
+        "sku": "BRI-01",
+        "nombre": "Ondo Brisa",
+        "cantidad": 1,
+        "precio_unitario": 1290
+      },
+      {
+        "sku": "CAS-01",
+        "nombre": "Casco Ondo",
+        "cantidad": 1,
+        "precio_unitario": 89
+      }
+    ],
+    "total": 1379,
+    "hace_dias_pedido": 66,
+    "hace_dias_entrega": null,
+    "entrega_estimada_en_dias": 5,
+    "envio": null,
+    "incidencia": null
+  },
+  {
+    "id": "OND-10262",
+    "cliente_id": "C020",
+    "estado": "enviado",
+    "lineas": [
+      {
+        "sku": "BRI-01",
+        "nombre": "Ondo Brisa",
+        "cantidad": 1,
+        "precio_unitario": 1290
+      },
+      {
+        "sku": "CAN-01",
+        "nombre": "Candado en U",
+        "cantidad": 1,
+        "precio_unitario": 59
+      }
+    ],
+    "total": 1349,
+    "hace_dias_pedido": 80,
+    "hace_dias_entrega": null,
+    "entrega_estimada_en_dias": 3,
+    "envio": {
+      "transportista": "DHL",
+      "seguimiento": "DHL530249085"
+    },
+    "incidencia": null
+  },
+  {
+    "id": "OND-10263",
+    "cliente_id": "C016",
+    "estado": "enviado",
+    "lineas": [
+      {
+        "sku": "CRG-01",
+        "nombre": "Cargador rápido",
+        "cantidad": 1,
+        "precio_unitario": 79
+      }
+    ],
+    "total": 79,
+    "hace_dias_pedido": 26,
+    "hace_dias_entrega": null,
+    "entrega_estimada_en_dias": 2,
+    "envio": {
+      "transportista": "GLS",
+      "seguimiento": "GLS780778896"
+    },
+    "incidencia": null
+  },
+  {
+    "id": "OND-10264",
+    "cliente_id": "C012",
+    "estado": "enviado",
+    "lineas": [
+      {
+        "sku": "BAT-36",
+        "nombre": "Batería extra 36 V",
+        "cantidad": 1,
+        "precio_unitario": 490
+      }
+    ],
+    "total": 490,
+    "hace_dias_pedido": 18,
+    "hace_dias_entrega": null,
+    "entrega_estimada_en_dias": 2,
+    "envio": {
+      "transportista": "Correos Express",
+      "seguimiento": "COR964190389"
+    },
+    "incidencia": null
+  },
+  {
+    "id": "OND-10265",
+    "cliente_id": "C028",
+    "estado": "enviado",
+    "lineas": [
+      {
+        "sku": "TRA-01",
+        "nombre": "Ondo Trazo",
+        "cantidad": 1,
+        "precio_unitario": 2190
+      },
+      {
+        "sku": "BAT-36",
+        "nombre": "Batería extra 36 V",
+        "cantidad": 1,
+        "precio_unitario": 490
+      }
+    ],
+    "total": 2680,
+    "hace_dias_pedido": 81,
+    "hace_dias_entrega": null,
+    "entrega_estimada_en_dias": 3,
+    "envio": {
+      "transportista": "GLS",
+      "seguimiento": "GLS750782964"
+    },
+    "incidencia": null
+  },
+  {
+    "id": "OND-10266",
+    "cliente_id": "C014",
+    "estado": "entregado",
+    "lineas": [
+      {
+        "sku": "RIA-01",
+        "nombre": "Ondo Ría",
+        "cantidad": 1,
+        "precio_unitario": 990
+      },
+      {
+        "sku": "BAT-36",
+        "nombre": "Batería extra 36 V",
+        "cantidad": 1,
+        "precio_unitario": 490
+      }
+    ],
+    "total": 1480,
+    "hace_dias_pedido": 19,
+    "hace_dias_entrega": 15,
+    "entrega_estimada_en_dias": null,
+    "envio": {
+      "transportista": "Correos Express",
+      "seguimiento": "COR130715983"
+    },
+    "incidencia": null
+  },
+  {
+    "id": "OND-10267",
+    "cliente_id": "C011",
+    "estado": "entregado",
+    "lineas": [
+      {
+        "sku": "CAN-01",
+        "nombre": "Candado en U",
+        "cantidad": 1,
+        "precio_unitario": 59
+      }
+    ],
+    "total": 59,
+    "hace_dias_pedido": 62,
+    "hace_dias_entrega": 56,
+    "entrega_estimada_en_dias": null,
+    "envio": {
+      "transportista": "DHL",
+      "seguimiento": "DHL202583513"
+    },
+    "incidencia": null
+  },
+  {
+    "id": "OND-10268",
+    "cliente_id": "C022",
+    "estado": "enviado",
+    "lineas": [
+      {
+        "sku": "CAS-01",
+        "nombre": "Casco Ondo",
+        "cantidad": 1,
+        "precio_unitario": 89
+      }
+    ],
+    "total": 89,
+    "hace_dias_pedido": 9,
+    "hace_dias_entrega": null,
+    "entrega_estimada_en_dias": 1,
+    "envio": {
+      "transportista": "DHL",
+      "seguimiento": "DHL864790366"
+    },
+    "incidencia": null
+  },
+  {
+    "id": "OND-10269",
+    "cliente_id": "C023",
+    "estado": "entregado",
+    "lineas": [
+      {
+        "sku": "CAR-01",
+        "nombre": "Ondo Carga",
+        "cantidad": 1,
+        "precio_unitario": 3450
+      }
+    ],
+    "total": 3450,
+    "hace_dias_pedido": 84,
+    "hace_dias_entrega": 79,
+    "entrega_estimada_en_dias": null,
+    "envio": {
+      "transportista": "DHL",
+      "seguimiento": "DHL791496627"
+    },
+    "incidencia": null
+  },
+  {
+    "id": "OND-10270",
+    "cliente_id": "C022",
+    "estado": "entregado",
+    "lineas": [
+      {
+        "sku": "CAR-01",
+        "nombre": "Ondo Carga",
+        "cantidad": 1,
+        "precio_unitario": 3450
+      }
+    ],
+    "total": 3450,
+    "hace_dias_pedido": 68,
+    "hace_dias_entrega": 65,
+    "entrega_estimada_en_dias": null,
+    "envio": {
+      "transportista": "SEUR",
+      "seguimiento": "SEU747836237"
+    },
+    "incidencia": null
+  }
+]

@@ -1,0 +1,220 @@
+[
+  {
+    "id": "T-MAD",
+    "nombre": "Ondo Taller Madrid Centro",
+    "ciudad": "Madrid",
+    "direccion": "Calle del Prado 12",
+    "horario": {
+      "0": [
+        10,
+        12,
+        17
+      ],
+      "1": [
+        10,
+        16
+      ],
+      "2": [
+        11,
+        13,
+        18
+      ],
+      "3": [
+        10,
+        17
+      ],
+      "4": [
+        9,
+        12
+      ],
+      "5": [
+        10,
+        11
+      ]
+    }
+  },
+  {
+    "id": "T-BCN",
+    "nombre": "Bici Raval (taller asociado)",
+    "ciudad": "Barcelona",
+    "direccion": "Carrer de la Riera Alta 8",
+    "horario": {
+      "0": [
+        10,
+        12,
+        17
+      ],
+      "1": [
+        10,
+        16
+      ],
+      "2": [
+        11,
+        13,
+        18
+      ],
+      "3": [
+        10,
+        17
+      ],
+      "4": [
+        9,
+        12
+      ],
+      "5": [
+        10,
+        11
+      ]
+    }
+  },
+  {
+    "id": "T-VLC",
+    "nombre": "Ruta Taller Valencia",
+    "ciudad": "Valencia",
+    "direccion": "Carrer de Sueca 41",
+    "horario": {
+      "0": [
+        10,
+        12,
+        17
+      ],
+      "1": [
+        10,
+        16
+      ],
+      "2": [
+        11,
+        13,
+        18
+      ],
+      "3": [
+        10,
+        17
+      ],
+      "4": [
+        9,
+        12
+      ]
+    }
+  },
+  {
+    "id": "T-SEV",
+    "nombre": "Pedal Sur Sevilla",
+    "ciudad": "Sevilla",
+    "direccion": "Calle Feria 77",
+    "horario": {
+      "0": [
+        10,
+        12,
+        17
+      ],
+      "1": [
+        10,
+        16
+      ],
+      "2": [
+        11,
+        13,
+        18
+      ],
+      "3": [
+        10,
+        17
+      ],
+      "4": [
+        9,
+        12
+      ]
+    }
+  },
+  {
+    "id": "T-LYO",
+    "nombre": "Atelier Vélo Lyon",
+    "ciudad": "Lyon",
+    "direccion": "Rue de Marseille 19",
+    "horario": {
+      "0": [
+        10,
+        12,
+        17
+      ],
+      "1": [
+        10,
+        16
+      ],
+      "2": [
+        11,
+        13,
+        18
+      ],
+      "3": [
+        10,
+        17
+      ],
+      "4": [
+        9,
+        12
+      ]
+    }
+  },
+  {
+    "id": "T-MIL",
+    "nombre": "Officina Ciclo Milano",
+    "ciudad": "Milán",
+    "direccion": "Via Tortona 5",
+    "horario": {
+      "0": [
+        10,
+        12,
+        17
+      ],
+      "1": [
+        10,
+        16
+      ],
+      "2": [
+        11,
+        13,
+        18
+      ],
+      "3": [
+        10,
+        17
+      ],
+      "4": [
+        9,
+        12
+      ]
+    }
+  },
+  {
+    "id": "T-LIS",
+    "nombre": "Oficina Pedal Lisboa",
+    "ciudad": "Lisboa",
+    "direccion": "Rua da Esperança 30",
+    "horario": {
+      "0": [
+        10,
+        12,
+        17
+      ],
+      "1": [
+        10,
+        16
+      ],
+      "2": [
+        11,
+        13,
+        18
+      ],
+      "3": [
+        10,
+        17
+      ],
+      "4": [
+        9,
+        12
+      ]
+    }
+  }
+]

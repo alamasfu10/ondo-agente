@@ -1,0 +1,82 @@
+[
+  {
+    "sku": "BRI-01",
+    "nombre": "Ondo Brisa",
+    "tipo": "bicicleta",
+    "categoria": "urbana",
+    "precio": 1290,
+    "bateria": "36 V 418 Wh",
+    "autonomia_km": 70
+  },
+  {
+    "sku": "RIA-01",
+    "nombre": "Ondo Ría",
+    "tipo": "bicicleta",
+    "categoria": "plegable",
+    "precio": 990,
+    "bateria": "36 V 300 Wh",
+    "autonomia_km": 50
+  },
+  {
+    "sku": "TRA-01",
+    "nombre": "Ondo Trazo",
+    "tipo": "bicicleta",
+    "categoria": "gravel",
+    "precio": 2190,
+    "bateria": "36 V 504 Wh",
+    "autonomia_km": 90
+  },
+  {
+    "sku": "CUM-01",
+    "nombre": "Ondo Cumbre",
+    "tipo": "bicicleta",
+    "categoria": "montaña",
+    "precio": 2890,
+    "bateria": "48 V 625 Wh",
+    "autonomia_km": 100
+  },
+  {
+    "sku": "CAR-01",
+    "nombre": "Ondo Carga",
+    "tipo": "bicicleta",
+    "categoria": "carga",
+    "precio": 3450,
+    "bateria": "48 V 750 Wh",
+    "autonomia_km": 80
+  },
+  {
+    "sku": "BAT-36",
+    "nombre": "Batería extra 36 V",
+    "tipo": "accesorio",
+    "categoria": "batería",
+    "precio": 490
+  },
+  {
+    "sku": "CRG-01",
+    "nombre": "Cargador rápido",
+    "tipo": "accesorio",
+    "categoria": "cargador",
+    "precio": 79
+  },
+  {
+    "sku": "CAS-01",
+    "nombre": "Casco Ondo",
+    "tipo": "accesorio",
+    "categoria": "casco",
+    "precio": 89
+  },
+  {
+    "sku": "CAN-01",
+    "nombre": "Candado en U",
+    "tipo": "accesorio",
+    "categoria": "candado",
+    "precio": 59
+  },
+  {
+    "sku": "ALF-01",
+    "nombre": "Alforjas impermeables",
+    "tipo": "accesorio",
+    "categoria": "alforjas",
+    "precio": 69
+  }
+]
