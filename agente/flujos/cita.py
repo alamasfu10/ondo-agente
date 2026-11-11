@@ -26,6 +26,8 @@ async def flujo_cita(estado: dict, h) -> dict:
     # 1. Motivo de la cita.
     if not datos.get("motivo"):
         i = eleccion(estado, MOTIVOS) if pendiente == "motivo" else None
+        if i is None and pendiente == "motivo" and ultima.get("motivo"):
+            i = 1 if "aver" in ultima["motivo"].lower() else 0
         if i is None:
             return {
                 "datos": datos,

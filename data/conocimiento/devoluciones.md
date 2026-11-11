@@ -1,9 +1,9 @@
 # Devoluciones
 
-## Plazo para devolver
-Tienes 30 días naturales desde la fecha de entrega para devolver cualquier producto de Ondo. Pasado ese plazo no se aceptan devoluciones por desistimiento, aunque sigue vigente la garantía.
+## Plazo para devolver una bicicleta o un accesorio
+El plazo de devolución es de 30 días naturales desde la fecha de entrega, para bicicletas y para accesorios. Dentro de esos 30 días puedes devolver el producto sin dar explicaciones. Pasado el plazo no se aceptan devoluciones, aunque sigue vigente la garantía.
 
-## Estado del producto
+## En qué estado tiene que estar el producto
 La bicicleta o el accesorio debe estar completo, con sus piezas, cargador y manuales. Se aceptan bicicletas usadas con normalidad durante el periodo de prueba siempre que no tengan daños por golpes o caídas. Si la bicicleta llega con daños, el equipo de postventa valora una deducción del importe.
 
 ## Devoluciones que revisa una persona

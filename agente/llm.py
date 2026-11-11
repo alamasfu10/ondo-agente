@@ -37,7 +37,10 @@ Contexto de la conversación:
 - Opciones que se acaban de mostrar al cliente (numeradas desde 1): {opciones}
 
 Reglas:
-- Si el mensaje contesta a lo que el asistente esperaba o elige una de las opciones, la intención es "continuar".
+- La intención es "continuar" solo si el asistente está esperando algo (ver arriba) y el mensaje lo contesta o \
+elige una de las opciones mostradas.
+- Si no hay nada en curso, clasifica el mensaje por lo que pide: "¿Dónde está mi pedido?" es "pedido", aunque \
+coincida con un botón.
 - Si el mensaje coincide con una opción mostrada o se refiere a ella ("la segunda", "el jueves"), rellena "eleccion".
 - Cualquier señal de peligro (batería que se calienta, huele a quemado, humo, hinchada, frenos que fallan) es \
 "seguridad", aunque el cliente lo cuente con calma o como una pregunta.
@@ -66,6 +69,9 @@ class Respuesta(BaseModel):
     ))
 
 
+IDIOMAS = {"es": "español", "en": "inglés", "fr": "francés", "it": "italiano", "pt": "portugués",
+           "de": "alemán", "ca": "catalán"}
+
 PERSONA_ONDO = """Eres el asistente virtual de Ondo, una tienda online de bicicletas eléctricas que vende en España, \
 Francia, Italia y Portugal. Eres una inteligencia artificial y lo dices si te preguntan.
 
@@ -79,9 +85,10 @@ Cómo escribes:
 
 
 async def redactar(estado: dict, borrador: dict) -> Respuesta:
-    sistema = PERSONA_ONDO.format(idioma=estado.get("idioma") or "es")
+    idioma = IDIOMAS.get(estado.get("idioma") or "es", estado.get("idioma") or "español")
+    sistema = PERSONA_ONDO.format(idioma=idioma)
     tarea = (
-        "Escribe el siguiente mensaje del asistente.\n"
+        f"Escribe el siguiente mensaje del asistente, en {idioma}.\n"
         f"Qué tiene que decir: {borrador['instruccion']}\n"
         f"Datos que puedes usar: {json.dumps(borrador.get('datos') or {}, ensure_ascii=False, default=str)}\n"
         f"Opciones (botones) que verá el cliente: {json.dumps(borrador.get('opciones') or [], ensure_ascii=False)}"

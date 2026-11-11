@@ -16,9 +16,10 @@ async def flujo_pedido(estado: dict, h) -> dict:
             pedido_id = ids[i]
 
     if not pedido_id:
-        activos = [p for p in cliente.get("pedidos", []) if p["estado"] in ("preparando", "enviado", "incidencia")]
-        if len(activos) == 1:
-            pedido_id = activos[0]["id"]
+        todos = cliente.get("pedidos", [])
+        activos = [p for p in todos if p["estado"] in ("preparando", "enviado", "incidencia")]
+        if len(activos) == 1 or len(todos) == 1:
+            pedido_id = (activos or todos)[0]["id"]
         else:
             ops = [p["id"] for p in (activos or cliente.get("pedidos", []))][:4]
             return {

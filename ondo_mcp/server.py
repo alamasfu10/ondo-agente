@@ -132,7 +132,7 @@ def huecos_taller(ciudad: str, dias: int = 14) -> dict:
     return {
         "encontrado": True,
         "taller": {k: t[k] for k in ("id", "nombre", "ciudad", "direccion")},
-        "huecos": hs[:6],
+        "huecos": hs[:12],
         "total_huecos": len(hs),
     }
 

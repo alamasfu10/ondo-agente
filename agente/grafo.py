@@ -26,6 +26,7 @@ from .flujos.pedido import flujo_pedido
 
 MAX_INTENTOS = 3  # al tercer mensaje seguido sin entender al cliente, pasa a una persona
 FLUJOS = {"pedido": "flujo_pedido", "devolucion": "flujo_devolucion", "cita": "flujo_cita"}
+MENU_INTENCION = dict(zip(MENU, ["pedido", "devolucion", "cita", "persona"]))
 
 # Red de seguridad que no depende del modelo: estas palabras siempre son un caso de seguridad.
 PELIGRO = re.compile(
@@ -39,19 +40,27 @@ def construir_grafo(h, checkpointer=None):
     async def interpretar(e: Estado) -> dict:
         texto = e["messages"][-1].content
         it = await llm.interpretar(e)
+        if texto.strip() in MENU_INTENCION:
+            it.intencion = MENU_INTENCION[texto.strip()]
         if PELIGRO.search(texto):
             it.intencion = "seguridad"
         datos = dict(e.get("datos") or {})
-        for campo in ("email", "pedido_id", "ciudad", "motivo"):
+        for campo in ("email", "pedido_id", "ciudad"):
             valor = getattr(it, campo)
-            if valor and not (campo == "motivo" and e.get("pendiente") not in (None, "motivo")):
-                datos[campo] = valor.upper() if campo == "pedido_id" else valor
+            if valor:
+                datos[campo] = valor.strip().upper() if campo == "pedido_id" else valor.strip()
+        # El motivo de una cita solo se acepta si es claramente una revisión o una avería.
+        # Lo miramos en el texto del cliente, no en lo que deduce el modelo.
+        if re.search(r"revis", texto, re.IGNORECASE):
+            datos["motivo"] = "revisión"
+        elif re.search(r"aver[ií]a|no funciona|no enciende|roto|rota|ruido|falla", texto, re.IGNORECASE):
+            datos["motivo"] = "avería"
         cambios = {"ultima": it.model_dump(), "idioma": it.idioma or e.get("idioma", "es"), "datos": datos}
         nueva = it.intencion
         if nueva in ("pedido", "devolucion", "cita", "informacion") and nueva != e.get("intencion"):
             # Cambio de tema: empezamos el flujo nuevo con los datos de este mensaje.
             cambios.update(fin_de_flujo())
-            cambios["datos"] = {k: v for k, v in datos.items() if getattr(it, k, None)}
+            cambios["datos"] = {k: v for k, v in datos.items() if getattr(it, k, None) or k == "motivo"}
             cambios["intencion"] = nueva
         elif nueva not in ("continuar", "no_entendido"):
             cambios["intencion"] = nueva
@@ -149,9 +158,9 @@ def construir_grafo(h, checkpointer=None):
                 "de Ondo le llamará por teléfono con prioridad y dale el número de caso.",
                 {"caso": r["caso"]["id"], "espera": r["espera"]})
         else:
-            b = borrador("Dile que pasas su consulta a una persona del equipo, que no tendrá que repetir nada, "
-                         "cuándo le atenderán y su número de caso.",
-                         {"caso": r["caso"]["id"], "espera": r["espera"]})
+            b = borrador("Dile que pasas su consulta a una persona del equipo y, en pocas palabras, por qué "
+                         "(motivo). Dile que no tendrá que repetir nada, cuándo le atenderán y su número de caso.",
+                         {"motivo": motivo, "caso": r["caso"]["id"], "espera": r["espera"]})
         return {"escalado": r["caso"], "intencion": None, "pendiente": None, "borrador": b}
 
     async def ya_escalado(e: Estado) -> dict:
