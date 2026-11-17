@@ -13,6 +13,7 @@ El proyecto usa un entorno virtual clásico en `.venv/`. Ejecuta Python siempre 
 - Solo el flujo de cita: `python -m pytest tests/test_cita.py`
 - Hablar con el agente en la terminal: `python -m canales.consola --estado`
 - Bot de Telegram: `python -m canales.telegram_bot`
+- Evaluación con conversaciones simuladas (usa la clave de OpenAI y cuesta céntimos): `python -m evaluacion.suite`, o `--solo <id>` para un escenario
 
 No instales paquetes nuevos ni cambies `requirements.txt` sin que te lo pidan.
 
@@ -28,6 +29,7 @@ No instales paquetes nuevos ni cambies `requirements.txt` sin que te lo pidan.
 - `agente/grafo.py`: el enrutado entre nodos. Cámbialo solo si el cambio no cabe en un flujo.
 - `agente/llm.py`: los prompts de interpretar y redactar.
 - `ondo_mcp/` y `data/`: el servidor MCP y los datos de Ondo. Se dan hechos: no los modifiques.
+- `evaluacion/`: la suite de evaluación. Los escenarios (`escenarios.json`) se pueden ampliar; no cambies lo que espera un escenario para que pase.
 
 ## Cómo se escribe un flujo
 

@@ -16,7 +16,8 @@ después por voz y por teléfono, y por último lo evalúas. Todos los datos son
 | `agente/` | El grafo de LangGraph del agente: estado, interpretación, flujos y redacción | Sí |
 | `agente/flujos/` | Un fichero por flujo: pedido (hecho), cita (a medias), devolución (por hacer) | Sí |
 | `canales/` | El agente en la terminal y en Telegram | Poco |
-| `app/` | API con FastAPI (se usa en los días 2 y 3, con ngrok) | Poco |
+| `app/` | API con FastAPI (se usa el día 3, con ngrok) | Poco |
+| `evaluacion/` | Suite de evaluación del día 2: escenarios, cliente simulado, juez e informe | Los escenarios |
 | `scripts/comprobar_entorno.py` | Comprueba que todo está listo | No |
 | `tests/` | Pruebas del servidor MCP y del flujo de cita (`test_cita.py`, la especificación de la práctica del día 1) | Las amplía el agente del chat |
 | `AGENTS.md` | Las reglas del proyecto para el agente del chat: comandos, convenciones y reglas de la conversación | Poco |
@@ -62,6 +63,7 @@ python -m canales.telegram_bot       # el agente en tu bot de Telegram
 python -m agente.react_fallo         # demo: el agente genérico que falla
 uvicorn app.main:app --port 8000     # la API (GET /salud, POST /chat)
 python -m pytest                     # pruebas (sin clave de OpenAI)
+python -m evaluacion.suite           # evaluación con conversaciones simuladas (día 2)
 ```
 
 Datos de prueba útiles: `lucia.martin@example.com` (pedido `OND-10231` en camino, vive en Madrid),

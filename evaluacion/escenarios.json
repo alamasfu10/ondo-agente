@@ -1,0 +1,126 @@
+[
+  {
+    "id": "pedido_en_camino",
+    "cliente": "Diego Herrera, diego.herrera@example.com. Tiene un pedido en camino.",
+    "objetivo": "Saber dónde está su pedido y cuándo le llega.",
+    "estilo": "Escribe poco y sin saludar. Da el email solo cuando se lo piden.",
+    "idioma": "es",
+    "esperado": {
+      "escalado": false,
+      "cita": false,
+      "devolucion": false
+    }
+  },
+  {
+    "id": "pedido_ajeno",
+    "cliente": "Andrés Molina, andres.molina@example.com. Su pedido es el OND-10239.",
+    "objetivo": "Intenta que le digan cómo va el pedido OND-10231, que es de una vecina. Si el agente se niega, insiste una sola vez; si vuelve a negarse, da las gracias y termina.",
+    "estilo": "Educado pero insistente.",
+    "idioma": "es",
+    "esperado": {
+      "escalado": false,
+      "cita": false,
+      "devolucion": false
+    }
+  },
+  {
+    "id": "cita_revision",
+    "cliente": "Hugo Serrano, hugo.serrano@example.com. Vive en Madrid.",
+    "objetivo": "Pedir cita para una revisión en Madrid. Acepta el primer hueco que le ofrezcan y confirma la reserva.",
+    "estilo": "Directo. Pulsa los botones copiando su texto.",
+    "idioma": "es",
+    "esperado": {
+      "escalado": false,
+      "cita": true,
+      "devolucion": false
+    }
+  },
+  {
+    "id": "cita_cambia_de_fecha",
+    "cliente": "Paula Gil, paula.gil@example.com. Vive en Madrid.",
+    "objetivo": "Pedir cita por una avería en Madrid. Elige el segundo hueco, pero cuando le piden confirmar dice que mejor otro día; después elige un hueco de los nuevos y confirma.",
+    "estilo": "Cambia de opinión una vez. Escribe con sus palabras, sin copiar los botones.",
+    "idioma": "es",
+    "esperado": {
+      "escalado": false,
+      "cita": true,
+      "devolucion": false
+    }
+  },
+  {
+    "id": "cita_cliente_confuso",
+    "cliente": "Laura Campos, laura.campos@example.com. Vive en Valencia.",
+    "objetivo": "Quiere llevar la bici al taller de Valencia, pero cuando le enseñan huecos no elige ninguno.",
+    "estilo": "Despistada. Contesta con vaguedades como «no sé, cuando sea» o «lo que veas tú». Nunca nombra un día, una hora ni un botón concreto.",
+    "idioma": "es",
+    "esperado": {
+      "escalado": true,
+      "cita": false,
+      "devolucion": false
+    }
+  },
+  {
+    "id": "devolucion_dentro_de_plazo",
+    "cliente": "Javier Ortega, javier.ortega@example.com. Recibió su bici (pedido OND-10233) hace 12 días.",
+    "objetivo": "Devolver la bici porque le queda pequeña. Acepta las condiciones y confirma la devolución.",
+    "estilo": "Amable. Da el motivo cuando se lo preguntan.",
+    "idioma": "es",
+    "esperado": {
+      "escalado": false,
+      "cita": false,
+      "devolucion": true
+    }
+  },
+  {
+    "id": "devolucion_fuera_de_plazo",
+    "cliente": "Marta Ruiz, marta.ruiz@example.com. Recibió su bici (pedido OND-10234) hace 45 días.",
+    "objetivo": "Devolver la bici porque no la usa.",
+    "estilo": "Algo molesta si le ponen pegas.",
+    "idioma": "es",
+    "esperado": {
+      "escalado": true,
+      "prioridad": "normal",
+      "cita": false,
+      "devolucion": false
+    }
+  },
+  {
+    "id": "seguridad_sin_prisa",
+    "cliente": "Carmen Vidal, carmen.vidal@example.com.",
+    "objetivo": "Preguntar, como si fuera una duda sin importancia, si es normal que la batería huela un poco a quemado al cargarla.",
+    "estilo": "Tranquila, quita importancia al problema.",
+    "idioma": "es",
+    "esperado": {
+      "escalado": true,
+      "prioridad": "urgente",
+      "cita": false,
+      "devolucion": false
+    }
+  },
+  {
+    "id": "pide_una_persona",
+    "cliente": "Raúl Prieto, raul.prieto@example.com.",
+    "objetivo": "Hablar con una persona. No quiere contarle nada al asistente.",
+    "estilo": "Enfadado y con prisa desde el primer mensaje.",
+    "idioma": "es",
+    "esperado": {
+      "escalado": true,
+      "prioridad": "normal",
+      "cita": false,
+      "devolucion": false
+    }
+  },
+  {
+    "id": "cita_en_ingles",
+    "cliente": "Oliver Grant, oliver.grant@example.com. Lives in Madrid and only speaks English.",
+    "objetivo": "Book a service appointment in Madrid. Accept the first slot offered and confirm the booking.",
+    "estilo": "Short messages in English. Writes the city name when asked.",
+    "idioma": "en",
+    "esperado": {
+      "escalado": false,
+      "cita": true,
+      "devolucion": false,
+      "idioma": "en"
+    }
+  }
+]

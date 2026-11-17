@@ -6,7 +6,7 @@
 
 Cada conversación es un thread_id: el checkpointer guarda su estado y lo
 recupera en el siguiente mensaje. Telegram usa el id del chat; la consola,
-un id fijo; el día 2, cada llamada tendrá el suyo.
+un id fijo; el día 3, cada llamada tendrá el suyo.
 """
 
 import uuid

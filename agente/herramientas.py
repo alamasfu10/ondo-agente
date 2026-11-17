@@ -24,7 +24,7 @@ def _cliente_mcp() -> MultiServerMCPClient:
             "transport": "stdio",
             "cwd": str(RAIZ),
             # El subproceso no hereda el entorno completo: le pasamos lo que necesita.
-            "env": {k: v for k, v in os.environ.items() if k.startswith(("OPENAI_", "RAG_", "PATH", "HOME"))},
+            "env": {k: v for k, v in os.environ.items() if k.startswith(("OPENAI_", "RAG_", "ONDO_", "PATH", "HOME"))},
         }
     })
 

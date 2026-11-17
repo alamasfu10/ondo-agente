@@ -8,6 +8,7 @@ empezar de cero.
 """
 
 import json
+import os
 from datetime import date, datetime, timedelta
 from pathlib import Path
 
@@ -52,14 +53,20 @@ def pedidos() -> list[dict]:
     return salida
 
 
+def _carpeta_estado() -> Path:
+    """data/estado/, salvo que ONDO_ESTADO diga otra carpeta (la evaluación usa una propia)."""
+    return Path(os.environ["ONDO_ESTADO"]) if os.environ.get("ONDO_ESTADO") else ESTADO
+
+
 def leer_estado(nombre: str) -> list[dict]:
-    f = ESTADO / f"{nombre}.json"
+    f = _carpeta_estado() / f"{nombre}.json"
     return json.loads(f.read_text(encoding="utf-8")) if f.exists() else []
 
 
 def guardar_estado(nombre: str, filas: list[dict]) -> None:
-    ESTADO.mkdir(parents=True, exist_ok=True)
-    (ESTADO / f"{nombre}.json").write_text(json.dumps(filas, ensure_ascii=False, indent=2), encoding="utf-8")
+    carpeta = _carpeta_estado()
+    carpeta.mkdir(parents=True, exist_ok=True)
+    (carpeta / f"{nombre}.json").write_text(json.dumps(filas, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
 def ahora() -> str:
