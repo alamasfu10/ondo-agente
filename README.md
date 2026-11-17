@@ -19,9 +19,9 @@ después por voz y por teléfono, y por último lo evalúas. Todos los datos son
 | `app/` | API con FastAPI (se usa en los días 2 y 3, con ngrok) | Poco |
 | `scripts/comprobar_entorno.py` | Comprueba que todo está listo | No |
 | `tests/` | Pruebas del servidor MCP y del flujo de cita (`test_cita.py`, la especificación de la práctica del día 1) | Las amplía Codex |
-| `AGENTS.md` | Las reglas del proyecto para Codex: comandos, convenciones y reglas de la conversación | Poco |
-| `.agents/skills/completar-flujo/` | Skill de Codex para implementar un paso de un flujo, con tests primero | No |
-| `.codex/agents/revisor_conversacion.toml` | Subagente de Codex que revisa un flujo contra las reglas, sin editar | No |
+| `AGENTS.md` | Las reglas del proyecto para el agente del chat: comandos, convenciones y reglas de la conversación | Poco |
+| `.agents/skills/completar-flujo/` | Skill para implementar un paso de un flujo, con tests primero | No |
+| `.github/agents/revisor_conversacion.agent.md` | Subagente que revisa un flujo contra las reglas, solo con herramientas de lectura | No |
 
 Herramientas del servidor MCP: `buscar_cliente`, `estado_pedido`, `crear_devolucion`,
 `huecos_taller`, `reservar_cita`, `escalar_a_humano` y `buscar_conocimiento`.
@@ -71,16 +71,17 @@ Datos de prueba útiles: `lucia.martin@example.com` (pedido `OND-10231` en camin
 Lo que crea el agente (citas, devoluciones y casos pasados a una persona) se guarda en
 `data/estado/`. Bórrala para empezar de cero.
 
-## Con Codex
+## Con el chat de VS Code
 
-El código del tema se le pide a Codex (extensión `openai.chatgpt` de VS Code, con tu clave de API)
-en lenguaje natural. Abre esta carpeta en VS Code para que Codex lea `AGENTS.md`,
-la skill (`$completar-flujo`) y el subagente (`revisor_conversacion`). Haz un commit antes de cada
-petición: `git restore .` deshace lo que no te convenza.
+El código del tema se le pide al chat de VS Code en lenguaje natural, con tu clave de OpenAI (sesión
+**Local**, modelo de OpenAI añadido en **Chat: Manage Language Models**). Modo **Ask** para entender el
+código y modo **Agent** para cambiarlo. Abre esta carpeta en VS Code para que el chat lea `AGENTS.md`, la
+skill (`/completar-flujo`) y el subagente (`revisor_conversacion`). Haz un commit antes de cada petición:
+`git restore .` deshace lo que no te convenza.
 
 ## Coste
 
 El agente usa la API de OpenAI con tu clave: unas dos llamadas al modelo por mensaje con
-`gpt-4.1-mini`, menos de un céntimo por conversación. Las peticiones a Codex gastan más: leen el proyecto y ejecutan
+`gpt-4.1-mini`, menos de un céntimo por conversación. Las peticiones al chat en modo Agent gastan más: leen el proyecto y ejecutan
 los tests varias veces. El índice del RAG se calcula una vez
 (una fracción de céntimo) y se guarda en `data/.cache/`.
