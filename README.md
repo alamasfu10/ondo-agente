@@ -65,8 +65,8 @@ Lo que crea el agente (citas, devoluciones y casos pasados a una persona) se gua
 
 ## Con Codex
 
-El código del tema no se escribe a mano: se le pide a Codex (extensión `openai.chatgpt` de VS Code,
-con tu clave de API) en lenguaje natural. Abre esta carpeta en VS Code para que Codex lea `AGENTS.md`,
+El código del tema se le pide a Codex (extensión `openai.chatgpt` de VS Code, con tu clave de API)
+en lenguaje natural. Abre esta carpeta en VS Code para que Codex lea `AGENTS.md`,
 la skill (`$completar-flujo`) y el subagente (`revisor_conversacion`). Haz un commit antes de cada
 petición: `git restore .` deshace lo que no te convenza.
 
