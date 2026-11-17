@@ -3,7 +3,8 @@
 Pasos: motivo → ciudad → huecos → elección → confirmación → reserva.
 Cada paso pide un solo dato y guarda en el estado qué está esperando.
 
-Los pasos 1 a 3 están hechos. Los pasos 4 y 5 son la práctica del día 1.
+Los pasos 1 a 3 están hechos. Los pasos 4 y 5 son la práctica del día 1: se
+completan con el asistente de código, y tests/test_cita.py dice cuándo están bien.
 """
 
 from .comun import borrador, eleccion, fin_de_flujo
@@ -89,21 +90,11 @@ async def flujo_cita(estado: dict, h) -> dict:
             ),
         }
 
-    # 4. Elección del hueco, con reparación si no lo entendemos.
     # 4. Elección del hueco.
-    # TODO (práctica del día 1, parte 2):
-    #   - Usa eleccion(estado, huecos) para saber qué hueco ha elegido el cliente.
-    #   - Si no lo sabes: suma un intento fallido, vuelve a mostrar los huecos como opciones y,
-    #     si supera MAX_REINTENTOS, devuelve {"intencion": "persona"} para pasarle con una persona.
-    #   - Si lo sabes: guarda "hueco_elegido", pon pendiente = "confirmar_cita" y pide confirmación
-    #     con las opciones ["Sí, resérvala", "No, ver otras fechas"].
+    # TODO (práctica del día 1): el cliente elige uno de los huecos ofrecidos.
 
     # 5. Confirmación y reserva.
-    # TODO (práctica del día 1, parte 2):
-    #   - Si confirma (estado["ultima"]["confirma"] es True), llama a la herramienta reservar_cita
-    #     con h.llamar("reservar_cita", cliente_id=..., hueco_id=..., motivo=...).
-    #   - Si la reserva sale bien, cierra el flujo con fin_de_flujo() y confirma la cita con sus datos.
-    #   - Si no confirma, ofrece otros huecos.
+    # TODO (práctica del día 1): se reserva solo si el cliente confirma.
 
     return {
         "borrador": borrador(
