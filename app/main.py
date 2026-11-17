@@ -1,6 +1,6 @@
 """API del agente de Ondo con FastAPI.
 
-    uv run uvicorn app.main:app --reload --port 8000
+    uvicorn app.main:app --reload --port 8000
 
 - GET  /salud   comprueba que el servidor responde (no usa el agente).
 - POST /chat    {"conversacion": "abc", "texto": "Hola"} → respuesta del agente.

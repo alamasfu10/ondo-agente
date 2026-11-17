@@ -38,22 +38,30 @@ cd ondo-agente
 O con el ZIP del día que encontrarás en el campus (`ondo-agente-dia1.zip`...): descomprímelo y, dentro de
 la carpeta, `git init && git add -A && git commit -m "Kit"` para poder deshacer los cambios del asistente.
 
-Después, en los dos casos:
+Después, en los dos casos, crea el entorno virtual e instala las dependencias (necesitas Python 3.11 o superior;
+recomendamos 3.12):
 
 ```bash
-uv sync
-cp .env.example .env        # y pon tu OPENAI_API_KEY
-uv run python scripts/comprobar_entorno.py
+python3 -m venv .venv
+source .venv/bin/activate          # Windows (PowerShell): .venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+cp .env.example .env               # y pon tu OPENAI_API_KEY
+python scripts/comprobar_entorno.py
 ```
+
+En cada terminal nueva, activa el entorno antes de nada (`source .venv/bin/activate`). En VS Code, elige
+el intérprete de `.venv` (**Python: Select Interpreter**) y las terminales nuevas lo activan solas.
 
 ## Cómo se usa
 
+Con el entorno activado:
+
 ```bash
-uv run python -m canales.consola --estado   # chat en la terminal, mostrando el estado
-uv run python -m canales.telegram_bot       # el agente en tu bot de Telegram
-uv run python -m agente.react_fallo         # demo: el agente genérico que falla
-uv run uvicorn app.main:app --port 8000     # la API (GET /salud, POST /chat)
-uv run pytest                               # pruebas (sin clave de OpenAI)
+python -m canales.consola --estado   # chat en la terminal, mostrando el estado
+python -m canales.telegram_bot       # el agente en tu bot de Telegram
+python -m agente.react_fallo         # demo: el agente genérico que falla
+uvicorn app.main:app --port 8000     # la API (GET /salud, POST /chat)
+python -m pytest                     # pruebas (sin clave de OpenAI)
 ```
 
 Datos de prueba útiles: `lucia.martin@example.com` (pedido `OND-10231` en camino, vive en Madrid),

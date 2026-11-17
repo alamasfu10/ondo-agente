@@ -2,19 +2,23 @@
 
 Agente de atención al cliente de Ondo, una tienda online ficticia de bicicletas eléctricas. Es un grafo de LangGraph que atiende por consola y por Telegram, y usa las herramientas de un servidor MCP.
 
+## Entorno
+
+El proyecto usa un entorno virtual clásico en `.venv/`. Ejecuta Python siempre desde él, aunque tu terminal no lo tenga activado: `.venv/bin/python` en macOS y Linux, `.venv\Scripts\python` en Windows. En los comandos de abajo, `python` significa ese Python.
+
 ## Comandos
 
-- Instalar dependencias: `uv sync`
-- Tests (sin clave de OpenAI, sin red): `uv run pytest`
-- Solo el flujo de cita: `uv run pytest tests/test_cita.py`
-- Hablar con el agente en la terminal: `uv run python -m canales.consola --estado`
-- Bot de Telegram: `uv run python -m canales.telegram_bot`
+- Instalar dependencias: `python -m pip install -r requirements.txt`
+- Tests (sin clave de OpenAI, sin red): `python -m pytest`
+- Solo el flujo de cita: `python -m pytest tests/test_cita.py`
+- Hablar con el agente en la terminal: `python -m canales.consola --estado`
+- Bot de Telegram: `python -m canales.telegram_bot`
 
-Usa siempre `uv run`. No instales paquetes con pip ni cambies `pyproject.toml` sin que te lo pidan.
+No instales paquetes nuevos ni cambies `requirements.txt` sin que te lo pidan.
 
 ## Terminado significa
 
-1. `uv run pytest` pasa entero.
+1. `python -m pytest` pasa entero.
 2. Has explicado qué ficheros has cambiado y por qué, en pocas líneas.
 3. No has tocado nada fuera de lo que se pidió.
 

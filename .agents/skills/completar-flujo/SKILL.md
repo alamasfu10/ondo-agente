@@ -16,5 +16,5 @@ Sigue estos pasos en orden. No te saltes el 3: el test es la especificación.
    - el paso a una persona al superar los reintentos o cuando una regla lo exige;
    - el fallo de la herramienta.
 4. Implementa lo mínimo para que los tests pasen, con las convenciones de `AGENTS.md`: un dato por paso, `borrador()` con la instrucción y los datos (nunca el texto final), `eleccion()` para las opciones y `fin_de_flujo()` al cerrar.
-5. Ejecuta `uv run pytest`. Si algo falla, arregla el código, no el test.
-6. Termina con un resumen corto: pasos implementados, tests nuevos y cómo probarlo en la consola (`uv run python -m canales.consola --estado`) con una conversación de ejemplo.
+5. Ejecuta los tests con el Python del entorno virtual, como dice `AGENTS.md` (`.venv/bin/python -m pytest`). Si algo falla, arregla el código, no el test.
+6. Termina con un resumen corto: pasos implementados, tests nuevos y cómo probarlo en la consola (`python -m canales.consola --estado`, con el entorno virtual activado) con una conversación de ejemplo.

@@ -1,6 +1,6 @@
 """Pruebas del flujo de cita: la especificación de los pasos 4 y 5 (práctica del día 1).
 
-    uv run pytest tests/test_cita.py
+    python -m pytest tests/test_cita.py
 
 No necesitan clave de OpenAI: prueban la lógica del flujo con herramientas
 simuladas, sin modelo ni servidor MCP. Al empezar la práctica fallan casi

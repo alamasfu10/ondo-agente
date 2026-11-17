@@ -1,6 +1,6 @@
 """Comprueba que tu entorno está listo para el Tema 10.
 
-    uv run python scripts/comprobar_entorno.py
+    python scripts/comprobar_entorno.py
 
 Revisa: versión de Python, dependencias, fichero .env, clave de OpenAI
 (con una llamada mínima que cuesta una fracción de céntimo), servidor MCP de
@@ -28,10 +28,12 @@ def mal(msg):
 
 def comprobar_python():
     v = sys.version_info
+    if sys.prefix == sys.base_prefix:
+        mal("No estás dentro del entorno virtual. Actívalo (guía, «Antes de empezar») y vuelve a ejecutar este script")
     if v >= (3, 11):
         print(f"{OK} Python {v.major}.{v.minor}")
     else:
-        mal(f"Python {v.major}.{v.minor}: necesitas 3.11 o superior (uv lo instala solo con «uv sync»)")
+        mal(f"Python {v.major}.{v.minor}: necesitas 3.11 o superior (la guía de preparación recomienda 3.12)")
 
 
 def comprobar_dependencias():
@@ -39,7 +41,7 @@ def comprobar_dependencias():
         import fastapi, langchain_openai, langgraph, mcp, telegram  # noqa: F401
         print(f"{OK} Dependencias instaladas")
     except ImportError as e:
-        mal(f"Falta una dependencia ({e.name}). Ejecuta «uv sync» en la carpeta del proyecto")
+        mal(f"Falta una dependencia ({e.name}). Activa el entorno virtual y ejecuta «python -m pip install -r requirements.txt»")
 
 
 def comprobar_env():

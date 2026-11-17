@@ -1,6 +1,6 @@
 """Pruebas del servidor MCP de Ondo (no necesitan clave de OpenAI).
 
-    uv run pytest
+    python -m pytest
 """
 
 import pytest

@@ -1,7 +1,7 @@
 """Habla con el agente de Ondo desde la terminal.
 
-    uv run python -m canales.consola
-    uv run python -m canales.consola --estado     # muestra el estado tras cada turno
+    python -m canales.consola
+    python -m canales.consola --estado     # muestra el estado tras cada turno
 
 Escribe el número de una opción para pulsar ese botón. /reset empieza una
 conversación nueva y /salir termina.

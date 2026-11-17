@@ -1,6 +1,6 @@
 """El agente de Ondo en un bot de Telegram.
 
-    uv run python -m canales.telegram_bot
+    python -m canales.telegram_bot
 
 Funciona en modo polling: el programa pregunta a Telegram cada poco si hay
 mensajes nuevos. La conexión sale de tu portátil, así que no hace falta una

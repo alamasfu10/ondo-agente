@@ -4,9 +4,9 @@ Un agente ReAct con las herramientas de Ondo y un prompt genérico, sin estado
 de conversación: cada mensaje llega solo, como si el canal no guardara nada.
 Sirve para ver los fallos antes de construir el grafo.
 
-    uv run python -m agente.react_fallo            # guion de la demo
-    uv run python -m agente.react_fallo --libre    # escribe tú los mensajes
-    uv run python -m agente.react_fallo --memoria  # con memoria: arregla una parte, no todo
+    python -m agente.react_fallo            # guion de la demo
+    python -m agente.react_fallo --libre    # escribe tú los mensajes
+    python -m agente.react_fallo --memoria  # con memoria: arregla una parte, no todo
 """
 
 import argparse

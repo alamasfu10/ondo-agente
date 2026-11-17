@@ -3,8 +3,8 @@
 Se da hecho. Lo arranca el agente como subproceso (transporte stdio), igual
 que los servidores MCP que construisteis en el Tema 6. Para probarlo solo:
 
-    uv run python -m ondo_mcp.server        # se queda esperando por stdio
-    uv run mcp dev ondo_mcp/server.py       # inspector web de MCP (opcional)
+    python -m ondo_mcp.server        # se queda esperando por stdio
+    mcp dev ondo_mcp/server.py       # inspector web de MCP (opcional)
 """
 
 from datetime import date, datetime, time, timedelta

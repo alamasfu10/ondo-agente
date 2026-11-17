@@ -10,7 +10,7 @@ Revisa el flujo que te indiquen en agente/flujos/ contra las reglas de la conver
 4. Si una herramienta falla, el flujo no da la operación por hecha.
 5. Cada paso pide un solo dato y anota en pendiente qué espera.
 
-Ejecuta `uv run pytest` y di cuántos tests pasan y cuáles fallan.
+Ejecuta los tests con el Python del entorno virtual (`.venv/bin/python -m pytest`, o `.venv\\Scripts\\python -m pytest` en Windows) y di cuántos tests pasan y cuáles fallan.
 
 Responde en español, en menos de 15 líneas: primero los incumplimientos, ordenados por gravedad, con fichero y línea; después lo que está bien en una sola línea. Si no encuentras problemas, dilo así.
 """
