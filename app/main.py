@@ -5,8 +5,9 @@
 - GET  /salud   comprueba que el servidor responde (no usa el agente).
 - POST /chat    {"conversacion": "abc", "texto": "Hola"} → respuesta del agente.
 
-El día 1 la usamos para probar ngrok. El día 2 esta misma aplicación recibe
-el audio de las llamadas; el día 3, las conversaciones simuladas.
+El día 1 no hace falta: el bot de Telegram va en polling. El día 2 esta misma
+aplicación recibe el audio de las llamadas (con ngrok); el día 3, las
+conversaciones simuladas.
 """
 
 import asyncio

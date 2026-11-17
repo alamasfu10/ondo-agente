@@ -16,7 +16,7 @@ después por voz y por teléfono, y por último lo evalúas. Todos los datos son
 | `agente/` | El grafo de LangGraph del agente: estado, interpretación, flujos y redacción | Sí |
 | `agente/flujos/` | Un fichero por flujo: pedido (hecho), cita (a medias), devolución (por hacer) | Sí |
 | `canales/` | El agente en la terminal y en Telegram | Poco |
-| `app/` | API con FastAPI (la usaremos con ngrok y en los días 2 y 3) | Poco |
+| `app/` | API con FastAPI (se usa en los días 2 y 3, con ngrok) | Poco |
 | `scripts/comprobar_entorno.py` | Comprueba que todo está listo | No |
 
 Herramientas del servidor MCP: `buscar_cliente`, `estado_pedido`, `crear_devolucion`,

@@ -84,7 +84,7 @@ def comprobar_mcp():
 
 def comprobar_ngrok():
     if not shutil.which("ngrok"):
-        mal("ngrok no está instalado (lo necesitas a partir del día 2: guía de preparación, paso 6)")
+        print(f"{AVISO} ngrok no está instalado (no lo necesitas el día 1; sí a partir del día 2: guía de preparación, paso 5)")
         return
     r = subprocess.run(["ngrok", "config", "check"], capture_output=True, text=True)
     if r.returncode == 0:
