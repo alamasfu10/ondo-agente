@@ -49,7 +49,15 @@ class AgenteOndo:
         """Empieza una conversación nueva (el estado anterior se queda en el checkpointer)."""
         self._sesiones.pop(conversacion, None)
 
-    async def responder(self, conversacion: str, texto: str) -> RespuestaAgente:
+    async def responder(self, conversacion: str, texto: str, traza=None) -> RespuestaAgente:
+        """Responde al mensaje. Si se pasa `traza(nodo, cambios)`, la llama al terminar cada nodo del grafo."""
         config = {"configurable": {"thread_id": self._thread(conversacion)}}
-        estado = await self.grafo.ainvoke({"messages": [HumanMessage(texto)]}, config)
+        entrada = {"messages": [HumanMessage(texto)]}
+        if traza is None:
+            estado = await self.grafo.ainvoke(entrada, config)
+        else:
+            async for paso in self.grafo.astream(entrada, config, stream_mode="updates"):
+                for nodo, cambios in paso.items():
+                    traza(nodo, cambios or {})
+            estado = (await self.grafo.aget_state(config)).values
         return RespuestaAgente(estado["messages"][-1].content, estado.get("opciones") or [], estado)

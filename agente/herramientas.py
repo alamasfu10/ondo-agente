@@ -35,11 +35,14 @@ class Herramientas:
     def __init__(self, tools):
         self.tools = tools
         self.por_nombre = {t.name: t for t in tools}
+        self.trazar = None  # función(nombre, args, resultado) que activa la traza de la consola
 
     async def llamar(self, nombre: str, **args) -> dict:
         args = {k: v for k, v in args.items() if v is not None}
-        res = await self.por_nombre[nombre].ainvoke(args)
-        return _a_dict(res)
+        res = _a_dict(await self.por_nombre[nombre].ainvoke(args))
+        if self.trazar:
+            self.trazar(nombre, args, res)
+        return res
 
 
 def _a_dict(res):

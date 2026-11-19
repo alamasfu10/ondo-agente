@@ -59,6 +59,7 @@ Con el entorno activado:
 
 ```bash
 python -m canales.consola --estado   # chat en la terminal, mostrando el estado
+python -m canales.consola --traza    # igual, y además el recorrido por el grafo en cada turno
 python -m canales.telegram_bot       # el agente en tu bot de Telegram
 python -m agente.react_fallo         # demo: el agente genérico que falla
 uvicorn app.main:app --port 8000     # la API (GET /salud, POST /chat)
