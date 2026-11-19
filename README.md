@@ -19,7 +19,7 @@ después por voz y por teléfono, y por último lo evalúas. Todos los datos son
 | `app/` | API con FastAPI (se usa el día 3, con ngrok) | Poco |
 | `evaluacion/` | Suite de evaluación del día 2: escenarios, cliente simulado, juez e informe | Los escenarios |
 | `scripts/comprobar_entorno.py` | Comprueba que todo está listo | No |
-| `tests/` | Pruebas del servidor MCP y del flujo de cita (`test_cita.py`, la especificación de la práctica del día 1) | Las amplía el agente del chat |
+| `tests/` | Pruebas del servidor MCP. Los tests del flujo de cita los escribes tú en la práctica del día 1 | Los escribe el agente del chat |
 | `AGENTS.md` | Las reglas del proyecto para el agente del chat: comandos, convenciones y reglas de la conversación | Poco |
 | `.agents/skills/completar-flujo/` | Skill para implementar un paso de un flujo, con tests primero | No |
 | `.github/agents/revisor_conversacion.agent.md` | Subagente que revisa un flujo contra las reglas, solo con herramientas de lectura | No |

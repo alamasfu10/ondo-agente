@@ -10,8 +10,8 @@ El proyecto usa un entorno virtual clásico en `.venv/`. Ejecuta Python siempre 
 
 - Instalar dependencias: `python -m pip install -r requirements.txt`
 - Tests (sin clave de OpenAI, sin red): `python -m pytest`
-- Solo el flujo de cita: `python -m pytest tests/test_cita.py`
-- Hablar con el agente en la terminal: `python -m canales.consola --estado`
+- Solo los tests de un fichero: `python -m pytest tests/test_<flujo>.py`
+- Hablar con el agente en la terminal: `python -m canales.consola --traza` (recorrido por el grafo y estado en cada turno; `--estado` solo el estado)
 - Bot de Telegram: `python -m canales.telegram_bot`
 - Evaluación con conversaciones simuladas (usa la clave de OpenAI y cuesta céntimos): `python -m evaluacion.suite`, o `--solo <id>` para un escenario
 
@@ -19,7 +19,7 @@ No instales paquetes nuevos ni cambies `requirements.txt` sin que te lo pidan.
 
 ## Terminado significa
 
-1. `python -m pytest` pasa entero.
+1. Los tests de lo que te han pedido pasan. Si te piden un solo paso de un flujo, los tests de los pasos que no te han pedido pueden seguir en rojo: dilo en tu resumen y no los toques.
 2. Has explicado qué ficheros has cambiado y por qué, en pocas líneas.
 3. No has tocado nada fuera de lo que se pidió.
 
@@ -52,7 +52,11 @@ Son las reglas de diseño de Ondo. Cualquier cambio en un flujo las cumple:
 
 ## Tests
 
-- Los tests de flujos usan herramientas simuladas, sin modelo ni MCP. Sigue el patrón de `tests/test_cita.py` (`HerramientasFalsas` y una función que construye el estado).
+- Los tests de flujos usan herramientas simuladas, sin modelo ni MCP, en `tests/test_<flujo>.py`. Dos piezas:
+  - Una clase `HerramientasFalsas` con `async def llamar(self, nombre, **args)` que devuelve datos fijos (por ejemplo, `huecos_taller` con un taller y varios huecos, `reservar_cita` con éxito o con `{"ok": False, "error": ...}`), apunta cada llamada en una lista y lanza `AssertionError` si el flujo llama a una herramienta que no debería.
+  - Una función que construye el estado a mano: `messages` con un `HumanMessage` del cliente, `cliente`, `datos`, `huecos`, `opciones`, `pendiente`, `intentos_fallidos` y `ultima` (la interpretación del modelo, con `intencion`, `eleccion` y `confirma`).
+- Cada test llama a `await flujo_x(estado, herramientas)`, y comprueba el dict que devuelve (`pendiente`, `intencion`, `intentos_fallidos`, `borrador["opciones"]`...) y las herramientas llamadas. Los tests son `async def` sin decorador: `pytest.ini` ya los ejecuta.
+- Si te piden los tests antes que el código, escríbelos desde la especificación que te den, sin implementar nada, y ejecútalos para comprobar que fallan por lo que falta, no por un error del propio test.
 - Si un test falla porque el código está mal, se arregla el código. No cambies lo que espera un test para que pase.
 
 ## Límites

@@ -3,8 +3,9 @@
 Pasos: motivo → ciudad → huecos → elección → confirmación → reserva.
 Cada paso pide un solo dato y guarda en el estado qué está esperando.
 
-Los pasos 1 a 3 están hechos. Los pasos 4 y 5 son la práctica del día 1: se
-completan con el asistente de código, y tests/test_cita.py dice cuándo están bien.
+Los pasos 1 a 3 están hechos. El paso 4 (elegir hueco) es la práctica del día 1
+y el paso 5 (confirmar y reservar) la del día 2. No hay tests de este flujo: los
+escribes tú con el asistente de código antes de implementar nada.
 """
 
 from .comun import borrador, eleccion, fin_de_flujo
@@ -94,7 +95,7 @@ async def flujo_cita(estado: dict, h) -> dict:
     # TODO (práctica del día 1): el cliente elige uno de los huecos ofrecidos.
 
     # 5. Confirmación y reserva.
-    # TODO (práctica del día 1): se reserva solo si el cliente confirma.
+    # TODO (práctica del día 2): se reserva solo si el cliente confirma.
 
     return {
         "borrador": borrador(
