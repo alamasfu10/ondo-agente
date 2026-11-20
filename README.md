@@ -80,11 +80,13 @@ Lo que crea el agente (citas, devoluciones y casos pasados a una persona) se gua
 ```bash
 python -m canales.voz                 # abre http://localhost:7860, pulsa Connect y habla (mejor con auriculares)
 python -m canales.voz --como-chat     # el agente del chat tal cual (redacta para leer, sin frase de espera)
+python -m canales.voz --voz elevenlabs  # la voz de ElevenLabs (ELEVENLABS_API_KEY y ELEVENLABS_VOICE_ID en el .env)
 ```
 
 Es una cascada de Pipecat: el audio del navegador llega por WebRTC, `gpt-transcribe` lo pasa a texto, el
 detector de turno decide cuándo has terminado de hablar, el grafo de siempre decide qué responder con el
-prompt de voz de `agente/llm.py` (`PERSONA_ONDO_VOZ`) y `gpt-4o-mini-tts` lo dice. Lo que dices y lo que
+prompt de voz de `agente/llm.py` (`PERSONA_ONDO_VOZ`) y `gpt-4o-mini-tts` lo dice. Con `--voz elevenlabs`, lo
+dice una voz de ElevenLabs: solo cambia esa pieza de la tubería, en el navegador y en el teléfono. Lo que dices y lo que
 responde el agente sale en la terminal, con lo que tarda cada turno. Si el micrófono no funciona, el
 cuadro de texto de la página también le llega al agente.
 

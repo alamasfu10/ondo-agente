@@ -13,7 +13,7 @@ El proyecto usa un entorno virtual clásico en `.venv/`. Ejecuta Python siempre 
 - Solo los tests de un fichero: `python -m pytest tests/test_<flujo>.py`
 - Hablar con el agente en la terminal: `python -m canales.consola --traza` (recorrido por el grafo y estado en cada turno; `--estado` solo el estado)
 - Bot de Telegram: `python -m canales.telegram_bot`
-- Voz en el navegador: `python -m canales.voz` (http://localhost:7860; `--como-chat` usa el agente del chat tal cual)
+- Voz en el navegador: `python -m canales.voz` (http://localhost:7860; `--como-chat` usa el agente del chat tal cual; `--voz elevenlabs` usa la voz de ElevenLabs)
 - Evaluación con conversaciones simuladas (usa la clave de OpenAI y cuesta céntimos): `python -m evaluacion.suite`, o `--solo <id>` para un escenario
 
 No instales paquetes nuevos ni cambies `requirements.txt` sin que te lo pidan.

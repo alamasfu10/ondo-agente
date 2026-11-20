@@ -2,6 +2,7 @@
 
     python -m canales.voz                      # navegador: abre http://localhost:7860 y pulsa Connect
     python -m canales.voz --como-chat          # el agente del chat, tal cual: redacta para leer y no avisa al esperar
+    python -m canales.voz --voz elevenlabs     # la misma llamada con una voz de ElevenLabs (clave y voz en el .env)
     python -m canales.voz -t twilio -x xxxx.ngrok-free.dev    # teléfono con Twilio (demo del docente)
 
 Es una cascada de Pipecat. El audio entra por el transporte, el STT lo
@@ -21,6 +22,7 @@ Cada llamada tiene su propio AgenteOndo, con su servidor MCP y su thread_id.
 import argparse
 import asyncio
 import os
+import sys
 import time
 import uuid
 
@@ -47,6 +49,7 @@ from pipecat.processors.aggregators.llm_response_universal import (
 from pipecat.processors.frame_processor import FrameDirection, FrameProcessor
 from pipecat.runner.types import RunnerArguments, SmallWebRTCRunnerArguments
 from pipecat.services.openai.stt import OpenAISTTService
+from pipecat.services.elevenlabs.tts import ElevenLabsTTSService
 from pipecat.services.openai.tts import OpenAITTSService
 from pipecat.transcriptions.language import Language
 from pipecat.workers.runner import WorkerRunner
@@ -61,6 +64,34 @@ ESPERA_ANTES_DE_LA_FRASE = 2.0  # segundos; cada turno hace dos llamadas al mode
 VOCABULARIO = ["Ondo", "Ondo Brisa", "Ondo Urbana", "Ondo Trail", "OND", "Brisa"]
 
 SALUDO = "Hola"  # el agente saluda como si el cliente hubiera dicho «Hola» al descolgar
+
+VOCES = ("openai", "elevenlabs")
+
+
+def falta_para_la_voz(voz: str) -> list[str]:
+    """Variables del .env que faltan para usar esa voz."""
+    necesarias = {"openai": ["OPENAI_API_KEY"], "elevenlabs": ["ELEVENLABS_API_KEY", "ELEVENLABS_VOICE_ID"]}[voz]
+    return [v for v in necesarias if not os.getenv(v)]
+
+
+def crear_tts(voz: str = "openai"):
+    """La síntesis de voz: la pieza que convierte la respuesta en audio. Lo demás de la tubería no cambia."""
+    if voz == "elevenlabs":
+        # Voces de la biblioteca de ElevenLabs o una voz propia; flash es su modelo de menos latencia.
+        return ElevenLabsTTSService(
+            api_key=os.getenv("ELEVENLABS_API_KEY"),
+            settings=ElevenLabsTTSService.Settings(
+                voice=os.getenv("ELEVENLABS_VOICE_ID"),
+                model=os.getenv("ELEVENLABS_MODEL", "eleven_flash_v2_5"),
+            ),
+        )
+    return OpenAITTSService(
+        api_key=os.getenv("OPENAI_API_KEY"),
+        settings=OpenAITTSService.Settings(
+            voice="coral",
+            instructions="Habla en español de España, con un tono cercano, claro y sin prisa.",
+        ),
+    )
 
 
 class AgenteOndoVoz(FrameProcessor):
@@ -186,7 +217,9 @@ async def crear_transporte(runner_args: RunnerArguments):
 
 async def bot(runner_args: RunnerArguments):
     """Una llamada: Pipecat la llama cada vez que alguien conecta desde el navegador o llama por teléfono."""
-    como_chat = getattr(getattr(runner_args, "cli_args", None), "como_chat", False)
+    cli = getattr(runner_args, "cli_args", None)
+    como_chat = getattr(cli, "como_chat", False)
+    voz = getattr(cli, "voz", "openai")
     transporte, call_sid = await crear_transporte(runner_args)
     conversacion = f"llamada-{call_sid or uuid.uuid4().hex[:8]}"
 
@@ -194,13 +227,7 @@ async def bot(runner_args: RunnerArguments):
         api_key=os.getenv("OPENAI_API_KEY"),
         settings=OpenAISTTService.Settings(language=Language.ES, keywords=VOCABULARIO),
     )
-    tts = OpenAITTSService(
-        api_key=os.getenv("OPENAI_API_KEY"),
-        settings=OpenAITTSService.Settings(
-            voice="coral",
-            instructions="Habla en español de España, con un tono cercano, claro y sin prisa.",
-        ),
-    )
+    tts = crear_tts(voz)
 
     contexto = LLMContext()
     turno_cliente, turno_agente = LLMContextAggregatorPair(
@@ -231,7 +258,8 @@ async def bot(runner_args: RunnerArguments):
 
         @transporte.event_handler("on_client_connected")
         async def al_conectar(transport, client):
-            logger.info(f"Llamada conectada ({conversacion}, {'como en el chat' if como_chat else 'prompt de voz'})")
+            logger.info(f"Llamada conectada ({conversacion}, {'como en el chat' if como_chat else 'prompt de voz'}, "
+                        f"voz de {voz})")
             await ondo.queue_frame(LLMContextFrame(_contexto_saludo()))
 
         @transporte.event_handler("on_client_disconnected")
@@ -254,5 +282,10 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Agente de Ondo por voz")
     parser.add_argument("--como-chat", action="store_true",
                         help="el agente del chat tal cual: redacta para leer y no dice la frase de espera")
+    parser.add_argument("--voz", choices=VOCES, default="openai",
+                        help="quién genera la voz del agente: OpenAI (por defecto) o ElevenLabs")
+    elegida = parser.parse_known_args()[0].voz
+    if faltan := falta_para_la_voz(elegida):
+        sys.exit(f"Para usar la voz de {elegida} faltan en el .env: {', '.join(faltan)}")
     persona.montar_rutas()
     main(parser)

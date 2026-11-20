@@ -5,7 +5,7 @@ from pipecat.processors.aggregators.llm_context import LLMContext
 
 from agente import llm
 from canales import persona
-from canales.voz import ultimo_mensaje_del_cliente
+from canales.voz import crear_tts, falta_para_la_voz, ultimo_mensaje_del_cliente
 
 
 def _contexto(*mensajes):
@@ -48,3 +48,19 @@ async def test_el_canal_elige_el_prompt(monkeypatch):
     await llm.redactar({**estado, "canal": "voz"}, {"instruccion": "Saluda"})
     assert "Es un chat" in sistemas[0]
     assert "el cliente te oye" in sistemas[1]
+
+
+def test_la_voz_de_elevenlabs_cambia_solo_el_tts(monkeypatch):
+    from pipecat.services.elevenlabs.tts import ElevenLabsTTSService
+    from pipecat.services.openai.tts import OpenAITTSService
+
+    monkeypatch.setenv("ELEVENLABS_API_KEY", "clave-de-prueba")
+    monkeypatch.setenv("ELEVENLABS_VOICE_ID", "voz-de-prueba")
+    assert isinstance(crear_tts("elevenlabs"), ElevenLabsTTSService)
+    assert isinstance(crear_tts("openai"), OpenAITTSService)
+
+
+def test_sin_clave_de_elevenlabs_dice_que_falta(monkeypatch):
+    monkeypatch.delenv("ELEVENLABS_API_KEY", raising=False)
+    monkeypatch.setenv("ELEVENLABS_VOICE_ID", "voz-de-prueba")
+    assert falta_para_la_voz("elevenlabs") == ["ELEVENLABS_API_KEY"]
