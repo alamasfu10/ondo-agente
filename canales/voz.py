@@ -25,6 +25,7 @@ import os
 import sys
 import time
 import uuid
+from datetime import date
 
 from agente.agente import AgenteOndo  # carga el .env antes que los servicios de voz
 from loguru import logger
@@ -66,6 +67,19 @@ VOCABULARIO = ["Ondo", "Ondo Brisa", "Ondo Urbana", "Ondo Trail", "OND", "Brisa"
 SALUDO = "Hola"  # el agente saluda como si el cliente hubiera dicho «Hola» al descolgar
 
 VOCES = ("openai", "elevenlabs")
+
+# OpenAI retira gpt-4o-mini-tts, la voz por defecto, el 6/01/2027 (guía «Text to speech» de OpenAI).
+RETIRADA_VOZ_OPENAI = date(2027, 1, 6)
+AVISO_VOZ_OPENAI = (
+    "OpenAI retira el 6/01/2027 la voz que usa el kit (gpt-4o-mini-tts). Usa la de ElevenLabs: "
+    "cuenta gratuita en elevenlabs.io, ELEVENLABS_API_KEY y ELEVENLABS_VOICE_ID en el .env, y "
+    "python -m canales.voz --voz elevenlabs"
+)
+
+
+def voz_retirada(voz: str, hoy: date | None = None) -> bool:
+    """True si se pide la voz de OpenAI cuando ya está retirada."""
+    return voz == "openai" and (hoy or date.today()) >= RETIRADA_VOZ_OPENAI
 
 
 def falta_para_la_voz(voz: str) -> list[str]:
@@ -287,5 +301,7 @@ if __name__ == "__main__":
     elegida = parser.parse_known_args()[0].voz
     if faltan := falta_para_la_voz(elegida):
         sys.exit(f"Para usar la voz de {elegida} faltan en el .env: {', '.join(faltan)}")
+    if voz_retirada(elegida):
+        logger.warning(AVISO_VOZ_OPENAI)
     persona.montar_rutas()
     main(parser)

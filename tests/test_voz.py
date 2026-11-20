@@ -5,7 +5,9 @@ from pipecat.processors.aggregators.llm_context import LLMContext
 
 from agente import llm
 from canales import persona
-from canales.voz import crear_tts, falta_para_la_voz, ultimo_mensaje_del_cliente
+from datetime import date
+
+from canales.voz import crear_tts, falta_para_la_voz, ultimo_mensaje_del_cliente, voz_retirada
 
 
 def _contexto(*mensajes):
@@ -64,3 +66,9 @@ def test_sin_clave_de_elevenlabs_dice_que_falta(monkeypatch):
     monkeypatch.delenv("ELEVENLABS_API_KEY", raising=False)
     monkeypatch.setenv("ELEVENLABS_VOICE_ID", "voz-de-prueba")
     assert falta_para_la_voz("elevenlabs") == ["ELEVENLABS_API_KEY"]
+
+
+def test_avisa_cuando_openai_retira_su_voz():
+    assert not voz_retirada("openai", date(2026, 11, 30))
+    assert voz_retirada("openai", date(2027, 1, 6))
+    assert not voz_retirada("elevenlabs", date(2027, 3, 1))

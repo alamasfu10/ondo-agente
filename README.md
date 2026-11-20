@@ -86,7 +86,13 @@ python -m canales.voz --voz elevenlabs  # la voz de ElevenLabs (ELEVENLABS_API_K
 Es una cascada de Pipecat: el audio del navegador llega por WebRTC, `gpt-transcribe` lo pasa a texto, el
 detector de turno decide cuándo has terminado de hablar, el grafo de siempre decide qué responder con el
 prompt de voz de `agente/llm.py` (`PERSONA_ONDO_VOZ`) y `gpt-4o-mini-tts` lo dice. Con `--voz elevenlabs`, lo
-dice una voz de ElevenLabs: solo cambia esa pieza de la tubería, en el navegador y en el teléfono. Lo que dices y lo que
+dice una voz de ElevenLabs: solo cambia esa pieza de la tubería, en el navegador y en el teléfono.
+
+**A partir del 6/01/2027**, OpenAI retira `gpt-4o-mini-tts`, la voz por defecto del kit, y la voz de OpenAI deja
+de sonar. Desde esa fecha usa la de ElevenLabs: crea una cuenta gratuita en elevenlabs.io, copia tu clave
+(«API Keys») y el ID de una voz en español de su biblioteca («Voices») en `ELEVENLABS_API_KEY` y
+`ELEVENLABS_VOICE_ID` del `.env`, y arranca siempre con `python -m canales.voz --voz elevenlabs`. El plan
+gratuito da para la práctica. El canal avisa al arrancar si pides la voz de OpenAI después de esa fecha. Lo que dices y lo que
 responde el agente sale en la terminal, con lo que tarda cada turno. Si el micrófono no funciona, el
 cuadro de texto de la página también le llega al agente.
 
