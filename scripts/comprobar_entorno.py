@@ -38,7 +38,7 @@ def comprobar_python():
 
 def comprobar_dependencias():
     try:
-        import fastapi, langchain_openai, langgraph, mcp, telegram  # noqa: F401
+        import fastapi, langchain_openai, langgraph, mcp, pipecat, telegram  # noqa: F401
         print(f"{OK} Dependencias instaladas")
     except ImportError as e:
         mal(f"Falta una dependencia ({e.name}). Activa el entorno virtual y ejecuta «python -m pip install -r requirements.txt»")
@@ -86,7 +86,7 @@ def comprobar_mcp():
 
 def comprobar_ngrok():
     if not shutil.which("ngrok"):
-        print(f"{AVISO} ngrok no está instalado (no lo necesitas hasta el día 3: guía de preparación, paso 5)")
+        print(f"{AVISO} ngrok no está instalado (solo lo usa el docente para la demo de teléfono: no lo necesitas)")
         return
     r = subprocess.run(["ngrok", "config", "check"], capture_output=True, text=True)
     if r.returncode == 0:

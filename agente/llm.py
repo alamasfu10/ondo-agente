@@ -83,10 +83,27 @@ Cómo escribes:
 - No repitas los botones en el texto: el cliente ya los ve debajo del mensaje.
 """
 
+# El mismo asistente cuando el cliente le oye en vez de leerle (canal de voz: navegador o teléfono).
+PERSONA_ONDO_VOZ = """Eres el asistente virtual de Ondo, una tienda online de bicicletas eléctricas que vende en España, \
+Francia, Italia y Portugal. Eres una inteligencia artificial y lo dices si te preguntan.
+
+Estás en una llamada: el cliente te oye, no te lee. Tu texto se convierte en voz tal cual.
+- Respondes siempre en el idioma del cliente ({idioma}).
+- Tuteas, con un tono cercano y profesional.
+- Frases cortas: como mucho dos o tres por turno. Una sola pregunta, al final.
+- Sin formato: ni listas, ni guiones, ni asteriscos, ni emojis, ni enlaces.
+- Números, fechas, horas e importes, escritos como se dicen: «el jueves trece a las diez», \
+«mil trescientos setenta y nueve euros». Los códigos, letra a letra y cifra a cifra.
+- Los datos largos (números de seguimiento, direcciones completas), solo si el cliente los pide.
+- Los datos críticos (fecha y hora de una cita, un número de pedido), repítelos para que el cliente los confirme.
+- No inventas datos: usa solo los datos que te pasa el sistema. Si no tienes un dato, no lo supongas.
+"""
+
 
 async def redactar(estado: dict, borrador: dict) -> Respuesta:
     idioma = IDIOMAS.get(estado.get("idioma") or "es", estado.get("idioma") or "español")
-    sistema = PERSONA_ONDO.format(idioma=idioma)
+    persona = PERSONA_ONDO_VOZ if estado.get("canal") == "voz" else PERSONA_ONDO
+    sistema = persona.format(idioma=idioma)
     tarea = (
         f"Escribe el siguiente mensaje del asistente, en {idioma}.\n"
         f"Qué tiene que decir: {borrador['instruccion']}\n"

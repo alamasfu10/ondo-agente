@@ -6,7 +6,7 @@
 
 Cada conversación es un thread_id: el checkpointer guarda su estado y lo
 recupera en el siguiente mensaje. Telegram usa el id del chat; la consola,
-un id fijo; el día 3, cada llamada tendrá el suyo.
+un id fijo; cada llamada de voz, el suyo.
 """
 
 import uuid
@@ -49,10 +49,13 @@ class AgenteOndo:
         """Empieza una conversación nueva (el estado anterior se queda en el checkpointer)."""
         self._sesiones.pop(conversacion, None)
 
-    async def responder(self, conversacion: str, texto: str, traza=None) -> RespuestaAgente:
-        """Responde al mensaje. Si se pasa `traza(nodo, cambios)`, la llama al terminar cada nodo del grafo."""
+    async def responder(self, conversacion: str, texto: str, traza=None, canal: str = "chat") -> RespuestaAgente:
+        """Responde al mensaje. Si se pasa `traza(nodo, cambios)`, la llama al terminar cada nodo del grafo.
+
+        `canal` decide cómo se redacta la respuesta: "chat" para leerla, "voz" para oírla.
+        """
         config = {"configurable": {"thread_id": self._thread(conversacion)}}
-        entrada = {"messages": [HumanMessage(texto)]}
+        entrada = {"messages": [HumanMessage(texto)], "canal": canal}
         if traza is None:
             estado = await self.grafo.ainvoke(entrada, config)
         else:

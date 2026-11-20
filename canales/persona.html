@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ondo · Persona de atención</title>
+  <style>
+    :root { --azul: #01415B; --fondo: #F6F8FA; --tarjeta: #FFFFFF; --borde: #D8E2EA; --verde: #1E8E5A; --rojo: #B3261E; }
+    body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; background: var(--fondo); color: #1B2430; }
+    main { max-width: 640px; margin: 0 auto; padding: 32px 16px; }
+    h1 { color: var(--azul); font-size: 1.4rem; margin: 0 0 4px; }
+    .estado { color: #5B6875; margin-bottom: 24px; }
+    .tarjeta { background: var(--tarjeta); border: 1px solid var(--borde); border-radius: 10px; padding: 20px; margin-bottom: 16px; }
+    .tarjeta h2 { font-size: 0.8rem; letter-spacing: 0.06em; text-transform: uppercase; color: #5B6875; margin: 0 0 8px; }
+    .resumen { white-space: pre-wrap; line-height: 1.5; }
+    .botones { display: flex; gap: 12px; }
+    button { font-size: 1rem; padding: 12px 20px; border: 0; border-radius: 8px; color: #fff; cursor: pointer; }
+    button:disabled { opacity: 0.4; cursor: default; }
+    #descolgar { background: var(--verde); }
+    #colgar { background: var(--rojo); }
+    #activar { background: var(--azul); }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Persona de atención de Ondo</h1>
+  <div class="estado" id="estado">Pulsa «Empezar turno» para recibir llamadas.</div>
+
+  <div class="tarjeta">
+    <h2>Caso</h2>
+    <div class="resumen" id="caso">Sin llamadas todavía.</div>
+  </div>
+
+  <div class="botones">
+    <button id="activar">Empezar turno</button>
+    <button id="descolgar" disabled>Descolgar</button>
+    <button id="colgar" disabled>Colgar</button>
+  </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@twilio/voice-sdk@2.18.5/dist/twilio.min.js"></script>
+<script>
+  const $ = (id) => document.getElementById(id);
+  let llamada = null;
+
+  function estado(texto) { $("estado").textContent = texto; }
+
+  async function mostrarCaso() {
+    const caso = await (await fetch("/humano/caso")).json();
+    if (!caso.id) { $("caso").textContent = "Sin resumen del agente."; return; }
+    $("caso").textContent =
+      `${caso.id} · prioridad ${caso.prioridad || "normal"}\nMotivo: ${caso.motivo || "-"}\n\n${caso.resumen || ""}`;
+  }
+
+  $("activar").onclick = async () => {
+    const r = await (await fetch("/humano/token")).json();
+    if (r.error) { estado(r.error); return; }
+    const device = new Twilio.Device(r.token, { logLevel: "warn" });
+    device.on("registered", () => estado(`Conectada como ${r.identidad}. Esperando llamadas.`));
+    device.on("error", (e) => estado(`Error: ${e.message}`));
+    device.on("incoming", async (entrante) => {
+      llamada = entrante;
+      estado("Llamada entrante de un cliente que viene del asistente.");
+      await mostrarCaso();
+      $("descolgar").disabled = false;
+      entrante.on("disconnect", () => { estado("Llamada terminada."); $("colgar").disabled = true; llamada = null; });
+      entrante.on("cancel", () => { estado("El cliente ha colgado antes de descolgar."); $("descolgar").disabled = true; });
+    });
+    await device.register();
+    $("activar").disabled = true;
+  };
+
+  $("descolgar").onclick = () => { llamada.accept(); estado("Hablando con el cliente."); $("descolgar").disabled = true; $("colgar").disabled = false; };
+  $("colgar").onclick = () => { llamada.disconnect(); };
+</script>
+</body>
+</html>

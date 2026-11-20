@@ -5,9 +5,8 @@
 - GET  /salud   comprueba que el servidor responde (no usa el agente).
 - POST /chat    {"conversacion": "abc", "texto": "Hola"} → respuesta del agente.
 
-Los días 1 y 2 no hace falta: el bot de Telegram va en polling y la evaluación
-habla con el agente directamente. El día 3 esta misma aplicación recibe el audio
-de las llamadas (con ngrok).
+No hace falta para las prácticas: el bot de Telegram va en polling, la evaluación
+habla con el agente directamente y la voz tiene su propio servidor (canales/voz.py).
 """
 
 import asyncio

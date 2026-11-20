@@ -1,6 +1,6 @@
 # AGENTS.md · ondo-agente
 
-Agente de atención al cliente de Ondo, una tienda online ficticia de bicicletas eléctricas. Es un grafo de LangGraph que atiende por consola y por Telegram, y usa las herramientas de un servidor MCP.
+Agente de atención al cliente de Ondo, una tienda online ficticia de bicicletas eléctricas. Es un grafo de LangGraph que atiende por consola, por Telegram y por voz (navegador y teléfono, con Pipecat), y usa las herramientas de un servidor MCP.
 
 ## Entorno
 
@@ -13,6 +13,7 @@ El proyecto usa un entorno virtual clásico en `.venv/`. Ejecuta Python siempre 
 - Solo los tests de un fichero: `python -m pytest tests/test_<flujo>.py`
 - Hablar con el agente en la terminal: `python -m canales.consola --traza` (recorrido por el grafo y estado en cada turno; `--estado` solo el estado)
 - Bot de Telegram: `python -m canales.telegram_bot`
+- Voz en el navegador: `python -m canales.voz` (http://localhost:7860; `--como-chat` usa el agente del chat tal cual)
 - Evaluación con conversaciones simuladas (usa la clave de OpenAI y cuesta céntimos): `python -m evaluacion.suite`, o `--solo <id>` para un escenario
 
 No instales paquetes nuevos ni cambies `requirements.txt` sin que te lo pidan.
@@ -27,7 +28,8 @@ No instales paquetes nuevos ni cambies `requirements.txt` sin que te lo pidan.
 
 - `agente/flujos/`: un fichero por flujo (pedido, cita, devolución). Aquí se trabaja casi siempre.
 - `agente/grafo.py`: el enrutado entre nodos. Cámbialo solo si el cambio no cabe en un flujo.
-- `agente/llm.py`: los prompts de interpretar y redactar.
+- `agente/llm.py`: los prompts de interpretar y redactar. `PERSONA_ONDO` es el prompt del chat y `PERSONA_ONDO_VOZ` el de voz; el canal lo elige.
+- `canales/voz.py`: el pipeline de voz (STT, turno, grafo, TTS). El grafo no cambia por la voz.
 - `ondo_mcp/` y `data/`: el servidor MCP y los datos de Ondo. Se dan hechos: no los modifiques.
 - `evaluacion/`: la suite de evaluación. Los escenarios (`escenarios.json`) se pueden ampliar; no cambies lo que espera un escenario para que pase.
 

@@ -15,8 +15,8 @@ después por voz y por teléfono, y por último lo evalúas. Todos los datos son
 | `data/` | 30 clientes, 40 pedidos, catálogo, 7 talleres y 10 documentos de política | No |
 | `agente/` | El grafo de LangGraph del agente: estado, interpretación, flujos y redacción | Sí |
 | `agente/flujos/` | Un fichero por flujo: pedido (hecho), cita (a medias), devolución (por hacer) | Sí |
-| `canales/` | El agente en la terminal y en Telegram | Poco |
-| `app/` | API con FastAPI (se usa el día 3, con ngrok) | Poco |
+| `canales/` | El agente en la terminal, en Telegram y por voz (navegador y teléfono, día 3) | Poco |
+| `app/` | API de texto con FastAPI (`/salud` y `/chat`) | Poco |
 | `evaluacion/` | Suite de evaluación del día 2: escenarios, cliente simulado, juez e informe | Los escenarios |
 | `scripts/comprobar_entorno.py` | Comprueba que todo está listo | No |
 | `tests/` | Pruebas del servidor MCP. Los tests del flujo de cita los escribes tú en la práctica del día 2 | Los escribe el agente del chat |
@@ -61,6 +61,7 @@ Con el entorno activado:
 python -m canales.consola --estado   # chat en la terminal, mostrando el estado
 python -m canales.consola --traza    # igual, y además el recorrido por el grafo en cada turno
 python -m canales.telegram_bot       # el agente en tu bot de Telegram
+python -m canales.voz                # el agente por voz en el navegador (día 3): http://localhost:7860
 python -m agente.react_fallo         # demo: el agente genérico que falla
 uvicorn app.main:app --port 8000     # la API (GET /salud, POST /chat)
 python -m pytest                     # pruebas (sin clave de OpenAI)
@@ -74,6 +75,24 @@ Datos de prueba útiles: `lucia.martin@example.com` (pedido `OND-10231` en camin
 Lo que crea el agente (citas, devoluciones y casos pasados a una persona) se guarda en
 `data/estado/`. Bórrala para empezar de cero.
 
+## Voz y teléfono (día 3)
+
+```bash
+python -m canales.voz                 # abre http://localhost:7860, pulsa Connect y habla (mejor con auriculares)
+python -m canales.voz --como-chat     # el agente del chat tal cual (redacta para leer, sin frase de espera)
+```
+
+Es una cascada de Pipecat: el audio del navegador llega por WebRTC, `gpt-transcribe` lo pasa a texto, el
+detector de turno decide cuándo has terminado de hablar, el grafo de siempre decide qué responder con el
+prompt de voz de `agente/llm.py` (`PERSONA_ONDO_VOZ`) y `gpt-4o-mini-tts` lo dice. Lo que dices y lo que
+responde el agente sale en la terminal, con lo que tarda cada turno. Si el micrófono no funciona, el
+cuadro de texto de la página también le llega al agente.
+
+El teléfono es una demo del docente: `python -m canales.voz -t twilio -x <tu-dominio-de-ngrok>` atiende
+las llamadas de un número de Twilio (con `TWILIO_ACCOUNT_SID` y `TWILIO_AUTH_TOKEN` en el `.env`) y, cuando el
+agente pasa el caso a una persona, transfiere la llamada a la página `http://localhost:7860/humano`, que
+muestra el resumen del caso. Detalles en `canales/persona.py`.
+
 ## Con el chat de VS Code
 
 El código del tema se le pide al chat de VS Code en lenguaje natural, con tu clave de OpenAI (sesión
@@ -85,6 +104,7 @@ skill (`/completar-flujo`) y el subagente (`revisor_conversacion`). Haz un commi
 ## Coste
 
 El agente usa la API de OpenAI con tu clave: unas dos llamadas al modelo por mensaje con
-`gpt-4.1-mini`, menos de un céntimo por conversación. Las peticiones al chat en modo Agent gastan más: leen el proyecto y ejecutan
+`gpt-4.1-mini`, menos de un céntimo por conversación. Por voz se añade la transcripción y la síntesis de
+cada turno, que se pagan por minuto de audio. Las peticiones al chat en modo Agent gastan más: leen el proyecto y ejecutan
 los tests varias veces. El índice del RAG se calcula una vez
 (una fracción de céntimo) y se guarda en `data/.cache/`.
