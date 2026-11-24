@@ -72,3 +72,65 @@ def test_avisa_cuando_openai_retira_su_voz():
     assert not voz_retirada("openai", date(2026, 11, 30))
     assert voz_retirada("openai", date(2027, 1, 6))
     assert not voz_retirada("elevenlabs", date(2027, 3, 1))
+
+
+async def test_un_turno_que_no_acaba_se_corta_y_dice_la_frase():
+    import asyncio
+
+    from pipecat.frames.frames import TTSSpeakFrame
+
+    from canales.voz import FRASE_TURNO_LARGO, CorteDeTurno, LimiteDeTurno
+
+    limite = LimiteDeTurno(segundos=0.05)
+    corte = CorteDeTurno(limite)
+    empujados, cortes = [], []
+
+    async def al_empujar(_, frame, direction):
+        empujados.append(frame)
+
+    async def al_cortar(_, *args, **kwargs):
+        cortes.append(True)
+
+    corte.add_event_handler("on_push_frame", al_empujar)
+    corte.add_event_handler("on_user_turn_stopped", al_cortar)
+    await corte.handle_user_turn_started()
+    await asyncio.sleep(0.2)
+    assert cortes and limite.silenciar and limite.cortes == 1
+    assert isinstance(empujados[0], TTSSpeakFrame) and empujados[0].text == FRASE_TURNO_LARGO
+
+
+async def test_un_turno_que_acaba_a_tiempo_no_se_corta():
+    import asyncio
+
+    from canales.voz import CorteDeTurno, LimiteDeTurno
+
+    limite = LimiteDeTurno(segundos=0.1)
+    corte = CorteDeTurno(limite)
+    await corte.handle_user_turn_started()
+    await asyncio.sleep(0.02)
+    await corte.handle_user_turn_stopped()
+    await asyncio.sleep(0.2)
+    assert limite.cortes == 0 and not limite.silenciar
+
+
+async def test_el_silencio_dura_hasta_que_el_agente_termina_la_frase():
+    from pipecat.frames.frames import BotStartedSpeakingFrame, BotStoppedSpeakingFrame, InputAudioRawFrame
+
+    from canales.voz import LimiteDeTurno, SilencioTrasCorte
+
+    limite = LimiteDeTurno()
+    silencio = SilencioTrasCorte(limite)
+    audio = InputAudioRawFrame(audio=b"\x00" * 320, sample_rate=8000, num_channels=1)
+    assert not await silencio.process_frame(audio)
+    limite.silenciar = True
+    assert await silencio.process_frame(audio)
+    assert await silencio.process_frame(BotStartedSpeakingFrame())
+    assert not await silencio.process_frame(BotStoppedSpeakingFrame())
+    assert not limite.silenciar and not await silencio.process_frame(audio)
+
+
+def test_mas_de_setenta_palabras_es_demasiado():
+    from canales.voz import MAX_PALABRAS_TURNO, demasiado_largo
+
+    assert not demasiado_largo("quiero cita en Madrid " * 5)
+    assert demasiado_largo("bla " * (MAX_PALABRAS_TURNO + 1))

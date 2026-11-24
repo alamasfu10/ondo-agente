@@ -96,6 +96,12 @@ gratuito da para la práctica. El canal avisa al arrancar si pides la voz de Ope
 responde el agente sale en la terminal, con lo que tarda cada turno. Si el micrófono no funciona, el
 cuadro de texto de la página también le llega al agente.
 
+Si alguien deja un podcast o la tele hablando, el agente no se pasa la llamada contestando a trozos: cuando
+el cliente lleva más de 30 segundos seguidos hablando, o más de 70 palabras sin dejarle contestar, corta,
+dice «Perdona, me he perdido: es mucho a la vez. ¿Me lo cuentas en una frase?», no manda ese texto al grafo y
+no se deja interrumpir mientras lo dice. Los límites están al principio de `canales/voz.py`
+(`MAX_SEGUNDOS_TURNO` y `MAX_PALABRAS_TURNO`).
+
 El teléfono es una demo del docente: `python -m canales.voz -t twilio -x <tu-dominio-de-ngrok>` atiende
 las llamadas de un número de Twilio (con `TWILIO_ACCOUNT_SID` y `TWILIO_AUTH_TOKEN` en el `.env`) y, cuando el
 agente pasa el caso a una persona, transfiere la llamada a la página `http://localhost:7860/humano`, que

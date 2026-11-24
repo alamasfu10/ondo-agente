@@ -53,6 +53,14 @@ from pipecat.services.openai.stt import OpenAISTTService
 from pipecat.services.elevenlabs.tts import ElevenLabsTTSService
 from pipecat.services.openai.tts import OpenAITTSService
 from pipecat.transcriptions.language import Language
+from pipecat.turns.user_mute.base_user_mute_strategy import BaseUserMuteStrategy
+from pipecat.turns.user_stop.base_user_turn_stop_strategy import BaseUserTurnStopStrategy
+from pipecat.turns.user_turn_strategies import (
+    StrategyMode,
+    UserTurnStrategies,
+    UserTurnStrategiesParams,
+    default_user_turn_stop_strategies,
+)
 from pipecat.workers.runner import WorkerRunner
 
 from canales import persona
@@ -65,6 +73,15 @@ ESPERA_ANTES_DE_LA_FRASE = 2.0  # segundos; cada turno hace dos llamadas al mode
 VOCABULARIO = ["Ondo", "Ondo Brisa", "Ondo Urbana", "Ondo Trail", "OND", "Brisa"]
 
 SALUDO = "Hola"  # el agente saluda como si el cliente hubiera dicho «Hola» al descolgar
+
+# Límite de lo que el cliente puede decir sin dejar contestar al agente. Con un podcast o una tele de fondo
+# no hay un turno de diez minutos: hay muchos turnos cortos que interrumpen al agente una y otra vez.
+# Por eso se cuentan dos cosas: un turno de más de 30 s seguidos, o más de 70 palabras acumuladas desde la
+# última respuesta que el cliente llegó a oír. Al pasarse, el agente corta, pide que se lo resuman, no
+# manda ese texto al grafo (ni gasta tokens en él) y no se deja interrumpir mientras lo dice.
+MAX_SEGUNDOS_TURNO = 30
+MAX_PALABRAS_TURNO = 70
+FRASE_TURNO_LARGO = "Perdona, me he perdido: es mucho a la vez. ¿Me lo cuentas en una frase?"
 
 VOCES = ("openai", "elevenlabs")
 
@@ -108,11 +125,94 @@ def crear_tts(voz: str = "openai"):
     )
 
 
+class LimiteDeTurno:
+    """Estado compartido entre el corte del turno y el silencio que lo sigue."""
+
+    def __init__(self, segundos: float = MAX_SEGUNDOS_TURNO, palabras: int = MAX_PALABRAS_TURNO):
+        self.segundos = segundos
+        self.palabras = palabras
+        self.silenciar = False   # True desde el corte hasta que el agente termina de decir la frase
+        self.cortes = 0
+
+
+class CorteDeTurno(BaseUserTurnStopStrategy):
+    """Cierra el turno del cliente si dura más de `limite.segundos`, aunque no haya terminado de hablar.
+
+    Se suma a la estrategia normal (el detector de fin de turno): el turno acaba con la primera que decida.
+    Al cortar, el agente dice FRASE_TURNO_LARGO y la entrada se silencia mientras la dice.
+    """
+
+    def __init__(self, limite: LimiteDeTurno):
+        super().__init__()
+        self.limite = limite
+        self._tarea: asyncio.Task | None = None
+
+    async def handle_user_turn_started(self):
+        self._cancelar()
+        self._tarea = asyncio.create_task(self._esperar())
+
+    async def handle_user_turn_stopped(self):
+        self._cancelar()
+
+    async def cleanup(self):
+        self._cancelar()
+
+    def _cancelar(self):
+        if self._tarea and not self._tarea.done() and self._tarea is not asyncio.current_task():
+            self._tarea.cancel()
+        self._tarea = None
+
+    async def _esperar(self):
+        await asyncio.sleep(self.limite.segundos)
+        self.limite.cortes += 1
+        self.limite.silenciar = True
+        logger.info(f"Turno cortado: el cliente lleva más de {self.limite.segundos:.0f} s hablando")
+        await self.push_frame(TTSSpeakFrame(FRASE_TURNO_LARGO))
+        await self.report_user_turn_stopped()
+
+
+class SilencioTrasCorte(BaseUserMuteStrategy):
+    """Ignora la entrada desde el corte hasta que el agente termina de decir la frase."""
+
+    def __init__(self, limite: LimiteDeTurno):
+        super().__init__()
+        self.limite = limite
+        self._hablando = False
+
+    async def process_frame(self, frame: Frame) -> bool:
+        await super().process_frame(frame)
+        if not self.limite.silenciar:
+            return False
+        if isinstance(frame, BotStartedSpeakingFrame):
+            self._hablando = True
+        elif isinstance(frame, BotStoppedSpeakingFrame) and self._hablando:
+            self._hablando = False
+            self.limite.silenciar = False
+            return False
+        return True
+
+
+def parametros_de_turno(limite: LimiteDeTurno) -> LLMUserAggregatorParams:
+    """Detector de voz, fin de turno normal más el corte por duración, y el silencio tras el corte."""
+    return LLMUserAggregatorParams(
+        vad_analyzer=SileroVADAnalyzer(),
+        user_turn_strategies=UserTurnStrategies(stop=[*default_user_turn_stop_strategies(), CorteDeTurno(limite)]),
+        user_turn_strategies_params=UserTurnStrategiesParams(stop_mode=StrategyMode.FIRST),
+        user_mute_strategies=[SilencioTrasCorte(limite)],
+    )
+
+
+def demasiado_largo(texto: str, palabras: int = MAX_PALABRAS_TURNO) -> bool:
+    return len(texto.split()) > palabras
+
+
 class AgenteOndoVoz(FrameProcessor):
     """Mete el grafo de Ondo en el pipeline: recibe el turno del cliente y devuelve la respuesta en texto."""
 
-    def __init__(self, agente: AgenteOndo, conversacion: str, como_chat: bool = False, al_escalar=None):
+    def __init__(self, agente: AgenteOndo, conversacion: str, como_chat: bool = False, al_escalar=None,
+                 limite: LimiteDeTurno | None = None):
         super().__init__()
+        self.limite = limite or LimiteDeTurno()
         self.agente = agente
         self.conversacion = conversacion
         self.canal = "chat" if como_chat else "voz"
@@ -130,6 +230,12 @@ class AgenteOndoVoz(FrameProcessor):
 
     async def turno(self, texto: str, frase_de_espera: bool = True):
         if not texto:
+            return
+        if demasiado_largo(texto, self.limite.palabras):  # lo que no deja contestar no llega al grafo
+            logger.info(f"Turno cortado: {len(texto.split())} palabras sin dejar contestar; no se manda al grafo")
+            self.limite.cortes += 1
+            self.limite.silenciar = True
+            await self.push_frame(TTSSpeakFrame(FRASE_TURNO_LARGO))
             return
         logger.info(f"Cliente: {texto}")
         inicio = time.perf_counter()
@@ -243,9 +349,10 @@ async def bot(runner_args: RunnerArguments):
     )
     tts = crear_tts(voz)
 
+    limite = LimiteDeTurno()
     contexto = LLMContext()
     turno_cliente, turno_agente = LLMContextAggregatorPair(
-        contexto, user_params=LLMUserAggregatorParams(vad_analyzer=SileroVADAnalyzer())
+        contexto, user_params=parametros_de_turno(limite)
     )
     tras_hablar = TrasHablar()
 
@@ -255,7 +362,7 @@ async def bot(runner_args: RunnerArguments):
             tras_hablar.programar(lambda: persona.transferir(call_sid))
 
     async with AgenteOndo() as agente:
-        ondo = AgenteOndoVoz(agente, conversacion, como_chat, al_escalar)
+        ondo = AgenteOndoVoz(agente, conversacion, como_chat, al_escalar, limite)
         pipeline = Pipeline([
             transporte.input(),   # audio del cliente
             stt,                  # voz → texto
