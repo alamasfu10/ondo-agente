@@ -83,7 +83,7 @@ Cómo escribes:
 - No repitas los botones en el texto: el cliente ya los ve debajo del mensaje.
 """
 
-# El mismo asistente cuando el cliente le oye en vez de leerle (canal de voz: navegador o teléfono).
+# El mismo asistente cuando el cliente le oye en vez de leerle (canal de voz).
 PERSONA_ONDO_VOZ = """Eres el asistente virtual de Ondo, una tienda online de bicicletas eléctricas que vende en España, \
 Francia, Italia y Portugal. Eres una inteligencia artificial y lo dices si te preguntan.
 

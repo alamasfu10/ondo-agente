@@ -4,7 +4,6 @@ from langchain_core.messages import HumanMessage
 from pipecat.processors.aggregators.llm_context import LLMContext
 
 from agente import llm
-from canales import persona
 from datetime import date
 
 from canales.voz import crear_tts, falta_para_la_voz, ultimo_mensaje_del_cliente, voz_retirada
@@ -25,12 +24,6 @@ def test_turno_partido_se_junta_en_un_mensaje():
 
 def test_sin_mensajes_del_cliente_no_hay_turno():
     assert ultimo_mensaje_del_cliente(_contexto(("assistant", "Hola"))) == ""
-
-
-def test_la_transferencia_llama_a_la_persona_sin_llamada_saliente():
-    twiml = persona.twiml_transferencia()
-    assert f"<Client>{persona.IDENTIDAD}</Client>" in twiml
-    assert "<Number>" not in twiml
 
 
 async def test_el_canal_elige_el_prompt(monkeypatch):

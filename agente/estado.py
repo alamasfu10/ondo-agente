@@ -45,7 +45,7 @@ class Interpretacion(BaseModel):
 class Estado(TypedDict, total=False):
     messages: Annotated[list[AnyMessage], add_messages]
     idioma: str
-    canal: str                    # "chat" (Telegram, consola) o "voz" (navegador, teléfono)
+    canal: str                    # "chat" (Telegram, consola) o "voz" (navegador)
     intencion: str | None
     cliente: dict | None          # cliente identificado (id, nombre, email, ciudad...)
     datos: dict                   # datos recogidos: email, pedido_id, ciudad, motivo

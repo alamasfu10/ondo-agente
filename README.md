@@ -5,7 +5,7 @@ Kit de partida del Tema 10 del Máster en Ingeniería de Automatización con IA 
 
 Ondo es una tienda online ficticia de bicicletas eléctricas que vende en España, Francia, Italia y
 Portugal. Durante el tema construyes su agente de atención al cliente: primero por chat (Telegram),
-después por voz y por teléfono, y por último lo evalúas. Todos los datos son inventados.
+después por voz, y por último lo evalúas. Todos los datos son inventados.
 
 ## Qué trae el kit
 
@@ -15,7 +15,8 @@ después por voz y por teléfono, y por último lo evalúas. Todos los datos son
 | `data/` | 30 clientes, 40 pedidos, catálogo, 7 talleres y 10 documentos de política | No |
 | `agente/` | El grafo de LangGraph del agente: estado, interpretación, flujos y redacción | Sí |
 | `agente/flujos/` | Un fichero por flujo: pedido (hecho), cita (a medias), devolución (por hacer) | Sí |
-| `canales/` | El agente en la terminal, en Telegram y por voz (navegador y teléfono, día 3) | Poco |
+| `canales/` | El agente en la terminal, en Telegram y por voz en el navegador (día 3) | Poco |
+| `practica/` | La práctica del día 3: una cascada de voz desde cero, y su solución | Sí |
 | `app/` | API de texto con FastAPI (`/salud` y `/chat`) | Poco |
 | `evaluacion/` | Suite de evaluación del día 2: escenarios, cliente simulado, juez e informe | Los escenarios |
 | `scripts/comprobar_entorno.py` | Comprueba que todo está listo | No |
@@ -75,18 +76,30 @@ Datos de prueba útiles: `lucia.martin@example.com` (pedido `OND-10231` en camin
 Lo que crea el agente (citas, devoluciones y casos pasados a una persona) se guarda en
 `data/estado/`. Bórrala para empezar de cero.
 
-## Voz y teléfono (día 3)
+## Voz (día 3)
 
 ```bash
-python -m canales.voz                 # abre http://localhost:7860, pulsa Connect y habla (mejor con auriculares)
+python -m practica.cascada_minima --traza    # tu cascada de la práctica, con los frames de cada turno
+python -m canales.voz                 # el agente de Ondo: abre http://localhost:7860/client, pulsa Connect y habla (con auriculares)
+python -m canales.voz --traza         # los frames de cada turno, con su hora
+python -m canales.voz --tiempos       # en qué se va el tiempo de cada respuesta, tramo a tramo
 python -m canales.voz --como-chat     # el agente del chat tal cual (redacta para leer, sin frase de espera)
 python -m canales.voz --voz elevenlabs  # la voz de ElevenLabs (ELEVENLABS_API_KEY y ELEVENLABS_VOICE_ID en el .env)
 ```
 
+`practica/cascada_minima.py` es la práctica: una cascada de siete piezas (transporte, STT, turno del cliente,
+LLM, TTS, salida y turno del agente) que construyes tú, sin el grafo. La solución está en
+`practica/solucion/cascada_minima.py` (`python -m practica.solucion.cascada_minima`). `canales/observar.py`
+tiene los dos observadores que usan `--traza` y `--tiempos`.
+
 Es una cascada de Pipecat: el audio del navegador llega por WebRTC, `gpt-transcribe` lo pasa a texto, el
 detector de turno decide cuándo has terminado de hablar, el grafo de siempre decide qué responder con el
 prompt de voz de `agente/llm.py` (`PERSONA_ONDO_VOZ`) y `gpt-4o-mini-tts` lo dice. Con `--voz elevenlabs`, lo
-dice una voz de ElevenLabs: solo cambia esa pieza de la tubería, en el navegador y en el teléfono.
+dice una voz de ElevenLabs: solo cambia esa pieza de la tubería.
+
+Cuándo termina tu turno lo deciden dos ajustes al principio de `canales/voz.py`: `FIN_DE_TURNO`
+(`"significado"`, el modelo smart turn v3, o `"silencio"`, un temporizador) y `SILENCIO_DETECTOR`, el silencio
+que espera el detector de voz.
 
 **A partir del 6/01/2027**, OpenAI retira `gpt-4o-mini-tts`, la voz por defecto del kit, y la voz de OpenAI deja
 de sonar. Desde esa fecha usa la de ElevenLabs: crea una cuenta gratuita en elevenlabs.io, copia tu clave
@@ -101,11 +114,6 @@ el cliente lleva más de 30 segundos seguidos hablando, o más de 70 palabras si
 dice «Perdona, me he perdido: es mucho a la vez. ¿Me lo cuentas en una frase?», no manda ese texto al grafo y
 no se deja interrumpir mientras lo dice. Los límites están al principio de `canales/voz.py`
 (`MAX_SEGUNDOS_TURNO` y `MAX_PALABRAS_TURNO`).
-
-El teléfono es una demo del docente: `python -m canales.voz -t twilio -x <tu-dominio-de-ngrok>` atiende
-las llamadas de un número de Twilio (con `TWILIO_ACCOUNT_SID` y `TWILIO_AUTH_TOKEN` en el `.env`) y, cuando el
-agente pasa el caso a una persona, transfiere la llamada a la página `http://localhost:7860/humano`, que
-muestra el resumen del caso. Detalles en `canales/persona.py`.
 
 ## Con el chat de VS Code
 

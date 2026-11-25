@@ -1,9 +1,10 @@
-"""Habla con el agente de Ondo por voz: en el navegador o por teléfono.
+"""Habla con el agente de Ondo por voz, en el navegador.
 
-    python -m canales.voz                      # navegador: abre http://localhost:7860 y pulsa Connect
+    python -m canales.voz                      # abre http://localhost:7860/client y pulsa Connect
+    python -m canales.voz --traza              # los frames de cada turno, con su hora (canales/observar.py)
+    python -m canales.voz --tiempos            # en qué se va el tiempo de cada respuesta
     python -m canales.voz --como-chat          # el agente del chat, tal cual: redacta para leer y no avisa al esperar
-    python -m canales.voz --voz elevenlabs     # la misma llamada con una voz de ElevenLabs (clave y voz en el .env)
-    python -m canales.voz -t twilio -x xxxx.ngrok-free.dev    # teléfono con Twilio (demo del docente)
+    python -m canales.voz --voz elevenlabs     # la misma conversación con una voz de ElevenLabs (clave y voz en el .env)
 
 Es una cascada de Pipecat. El audio entra por el transporte, el STT lo
 transcribe, el agregador decide cuándo ha terminado de hablar el cliente, el
@@ -16,7 +17,11 @@ El grafo no cambia: entra como un procesador más que recibe el texto del
 cliente y devuelve el texto que se dice. Lo único que cambia con la voz es
 cómo se redacta (el prompt de voz de agente/llm.py).
 
-Cada llamada tiene su propio AgenteOndo, con su servidor MCP y su thread_id.
+Es la cascada de practica/cascada_minima.py con dos cambios: en lugar del LLM
+va AgenteOndoVoz, y el turno del cliente lleva el detector de fin de turno por
+significado y el límite de lo que el cliente puede decir sin dejar contestar.
+
+Cada conversación tiene su propio AgenteOndo, con su servidor MCP y su thread_id.
 """
 
 import argparse
@@ -30,6 +35,7 @@ from datetime import date
 from agente.agente import AgenteOndo  # carga el .env antes que los servicios de voz
 from loguru import logger
 from pipecat.audio.vad.silero import SileroVADAnalyzer
+from pipecat.audio.vad.vad_analyzer import VADParams
 from pipecat.frames.frames import (
     BotStartedSpeakingFrame,
     BotStoppedSpeakingFrame,
@@ -48,13 +54,16 @@ from pipecat.processors.aggregators.llm_response_universal import (
     LLMUserAggregatorParams,
 )
 from pipecat.processors.frame_processor import FrameDirection, FrameProcessor
-from pipecat.runner.types import RunnerArguments, SmallWebRTCRunnerArguments
+from pipecat.runner.types import RunnerArguments
 from pipecat.services.openai.stt import OpenAISTTService
 from pipecat.services.elevenlabs.tts import ElevenLabsTTSService
 from pipecat.services.openai.tts import OpenAITTSService
 from pipecat.transcriptions.language import Language
+from pipecat.transports.base_transport import TransportParams
+from pipecat.transports.smallwebrtc.transport import SmallWebRTCTransport
 from pipecat.turns.user_mute.base_user_mute_strategy import BaseUserMuteStrategy
 from pipecat.turns.user_stop.base_user_turn_stop_strategy import BaseUserTurnStopStrategy
+from pipecat.turns.user_stop.speech_timeout_user_turn_stop_strategy import SpeechTimeoutUserTurnStopStrategy
 from pipecat.turns.user_turn_strategies import (
     StrategyMode,
     UserTurnStrategies,
@@ -63,7 +72,7 @@ from pipecat.turns.user_turn_strategies import (
 )
 from pipecat.workers.runner import WorkerRunner
 
-from canales import persona
+from canales.observar import observadores
 
 # Lo que el cliente oye si el agente tarda en responder (consultar una herramienta, dos llamadas al modelo...).
 FRASE_DE_ESPERA = "Un momento, lo miro."
@@ -72,7 +81,16 @@ ESPERA_ANTES_DE_LA_FRASE = 2.0  # segundos; cada turno hace dos llamadas al mode
 # Palabras que el reconocimiento de voz no conoce y tiene que acertar.
 VOCABULARIO = ["Ondo", "Ondo Brisa", "Ondo Urbana", "Ondo Trail", "OND", "Brisa"]
 
-SALUDO = "Hola"  # el agente saluda como si el cliente hubiera dicho «Hola» al descolgar
+SALUDO = "Hola"  # el agente saluda como si el cliente hubiera dicho «Hola» al conectar
+
+# Cuándo termina el turno del cliente. El detector de voz (Silero) marca que ha dejado de oír voz tras
+# SILENCIO_DETECTOR segundos de silencio. Después decide la estrategia de fin de turno:
+#   "significado": el modelo smart turn v3 escucha el final de la frase y decide si suena a terminada
+#                  (una pausa tras «quiero cambiar la cita del...» no cierra el turno).
+#   "silencio":    el turno se cierra tras SILENCIO_FIN_DE_TURNO segundos sin voz nueva, diga lo que diga.
+SILENCIO_DETECTOR = 0.2
+FIN_DE_TURNO = "significado"
+SILENCIO_FIN_DE_TURNO = 0.6
 
 # Límite de lo que el cliente puede decir sin dejar contestar al agente. Con un podcast o una tele de fondo
 # no hay un turno de diez minutos: hay muchos turnos cortos que interrumpen al agente una y otra vez.
@@ -192,11 +210,19 @@ class SilencioTrasCorte(BaseUserMuteStrategy):
         return True
 
 
-def parametros_de_turno(limite: LimiteDeTurno) -> LLMUserAggregatorParams:
-    """Detector de voz, fin de turno normal más el corte por duración, y el silencio tras el corte."""
+def estrategias_de_fin_de_turno(fin_de_turno: str = FIN_DE_TURNO) -> list[BaseUserTurnStopStrategy]:
+    """Quién decide que el cliente ha terminado: el modelo de fin de turno o un temporizador de silencio."""
+    if fin_de_turno == "silencio":
+        return [SpeechTimeoutUserTurnStopStrategy(user_speech_timeout=SILENCIO_FIN_DE_TURNO)]
+    return default_user_turn_stop_strategies()  # smart turn v3, en local
+
+
+def parametros_de_turno(limite: LimiteDeTurno, fin_de_turno: str = FIN_DE_TURNO) -> LLMUserAggregatorParams:
+    """Detector de voz, fin de turno (por significado o por silencio) más el corte por duración, y el silencio
+    que sigue al corte."""
     return LLMUserAggregatorParams(
-        vad_analyzer=SileroVADAnalyzer(),
-        user_turn_strategies=UserTurnStrategies(stop=[*default_user_turn_stop_strategies(), CorteDeTurno(limite)]),
+        vad_analyzer=SileroVADAnalyzer(params=VADParams(stop_secs=SILENCIO_DETECTOR)),
+        user_turn_strategies=UserTurnStrategies(stop=[*estrategias_de_fin_de_turno(fin_de_turno), CorteDeTurno(limite)]),
         user_turn_strategies_params=UserTurnStrategiesParams(stop_mode=StrategyMode.FIRST),
         user_mute_strategies=[SilencioTrasCorte(limite)],
     )
@@ -209,7 +235,7 @@ def demasiado_largo(texto: str, palabras: int = MAX_PALABRAS_TURNO) -> bool:
 class AgenteOndoVoz(FrameProcessor):
     """Mete el grafo de Ondo en el pipeline: recibe el turno del cliente y devuelve la respuesta en texto."""
 
-    def __init__(self, agente: AgenteOndo, conversacion: str, como_chat: bool = False, al_escalar=None,
+    def __init__(self, agente: AgenteOndo, conversacion: str, como_chat: bool = False,
                  limite: LimiteDeTurno | None = None):
         super().__init__()
         self.limite = limite or LimiteDeTurno()
@@ -217,8 +243,10 @@ class AgenteOndoVoz(FrameProcessor):
         self.conversacion = conversacion
         self.canal = "chat" if como_chat else "voz"
         self.frase_de_espera = not como_chat
-        self.al_escalar = al_escalar
         self._caso_avisado = None
+
+    def can_generate_metrics(self) -> bool:
+        return True  # mide lo que tarda el grafo, como mide el LLM de la cascada mínima (--tiempos)
 
     async def process_frame(self, frame: Frame, direction: FrameDirection):
         await super().process_frame(frame, direction)
@@ -239,6 +267,10 @@ class AgenteOndoVoz(FrameProcessor):
             return
         logger.info(f"Cliente: {texto}")
         inicio = time.perf_counter()
+        # Como un LLM: se anuncia que empieza la respuesta y se mide hasta que el texto está listo. El grafo
+        # devuelve la respuesta entera de una vez (un solo LLMTextFrame), no trozo a trozo.
+        await self.push_frame(LLMFullResponseStartFrame())
+        await self.start_ttfb_metrics()
         tarea = asyncio.create_task(self.agente.responder(self.conversacion, texto, canal=self.canal))
         try:
             try:
@@ -250,8 +282,8 @@ class AgenteOndoVoz(FrameProcessor):
         finally:
             if not tarea.done():  # el cliente ha interrumpido: el turno se descarta
                 tarea.cancel()
+        await self.stop_ttfb_metrics()
         logger.info(f"Agente ({time.perf_counter() - inicio:.1f} s): {r.texto}")
-        await self.push_frame(LLMFullResponseStartFrame())
         await self.push_frame(LLMTextFrame(r.texto))
         await self.push_frame(LLMFullResponseEndFrame())
 
@@ -259,30 +291,6 @@ class AgenteOndoVoz(FrameProcessor):
         if caso and caso.get("id") != self._caso_avisado:
             self._caso_avisado = caso.get("id")
             logger.info(f"Caso {caso.get('id')} para una persona: {caso.get('resumen')}")
-            if self.al_escalar:
-                await self.al_escalar(caso)
-
-
-class TrasHablar(FrameProcessor):
-    """Ejecuta una acción cuando el agente termina de decir su respuesta (por ejemplo, transferir la llamada)."""
-
-    def __init__(self):
-        super().__init__()
-        self.accion = None
-        self._hablando = False
-
-    def programar(self, accion):
-        self.accion = accion
-        self._hablando = False
-
-    async def process_frame(self, frame: Frame, direction: FrameDirection):
-        await super().process_frame(frame, direction)
-        if self.accion and isinstance(frame, BotStartedSpeakingFrame):
-            self._hablando = True
-        elif self.accion and self._hablando and isinstance(frame, BotStoppedSpeakingFrame):
-            accion, self.accion = self.accion, None
-            await accion()
-        await self.push_frame(frame, direction)
 
 
 def ultimo_mensaje_del_cliente(context: LLMContext) -> str:
@@ -306,63 +314,27 @@ def ultimo_mensaje_del_cliente(context: LLMContext) -> str:
     return " ".join(p for p in reversed(partes) if p)
 
 
-async def crear_transporte(runner_args: RunnerArguments):
-    """Navegador (WebRTC) o teléfono (Twilio por WebSocket). Devuelve el transporte y el id de la llamada."""
-    if isinstance(runner_args, SmallWebRTCRunnerArguments):
-        from pipecat.transports.base_transport import TransportParams
-        from pipecat.transports.smallwebrtc.transport import SmallWebRTCTransport
-
-        params = TransportParams(audio_in_enabled=True, audio_out_enabled=True)
-        return SmallWebRTCTransport(webrtc_connection=runner_args.webrtc_connection, params=params), None
-
-    from pipecat.runner.utils import parse_telephony_websocket
-    from pipecat.serializers.twilio import TwilioFrameSerializer
-    from pipecat.transports.websocket.fastapi import FastAPIWebsocketParams, FastAPIWebsocketTransport
-
-    # Los dos primeros mensajes de Twilio dicen qué llamada es (callSid) y qué stream de audio (streamSid).
-    _, llamada = await parse_telephony_websocket(runner_args.websocket)
-    serializador = TwilioFrameSerializer(
-        stream_sid=llamada["stream_id"],
-        call_sid=llamada["call_id"],
-        account_sid=os.getenv("TWILIO_ACCOUNT_SID", ""),
-        auth_token=os.getenv("TWILIO_AUTH_TOKEN", ""),
-        # No colgar al terminar el pipeline: si la llamada pasa a una persona, tiene que seguir viva.
-        params=TwilioFrameSerializer.InputParams(auto_hang_up=False),
-    )
-    params = FastAPIWebsocketParams(
-        audio_in_enabled=True, audio_out_enabled=True, add_wav_header=False, serializer=serializador
-    )
-    return FastAPIWebsocketTransport(websocket=runner_args.websocket, params=params), llamada["call_id"]
-
-
 async def bot(runner_args: RunnerArguments):
-    """Una llamada: Pipecat la llama cada vez que alguien conecta desde el navegador o llama por teléfono."""
-    cli = getattr(runner_args, "cli_args", None)
-    como_chat = getattr(cli, "como_chat", False)
-    voz = getattr(cli, "voz", "openai")
-    transporte, call_sid = await crear_transporte(runner_args)
-    conversacion = f"llamada-{call_sid or uuid.uuid4().hex[:8]}"
+    """Una conversación: Pipecat la llama cada vez que alguien pulsa Connect en el navegador."""
+    cli = runner_args.cli_args
+    transporte = SmallWebRTCTransport(
+        webrtc_connection=runner_args.webrtc_connection,
+        params=TransportParams(audio_in_enabled=True, audio_out_enabled=True),
+    )
+    conversacion = f"voz-{uuid.uuid4().hex[:8]}"
 
     stt = OpenAISTTService(
         api_key=os.getenv("OPENAI_API_KEY"),
         settings=OpenAISTTService.Settings(language=Language.ES, keywords=VOCABULARIO),
     )
-    tts = crear_tts(voz)
+    tts = crear_tts(cli.voz)
 
     limite = LimiteDeTurno()
     contexto = LLMContext()
-    turno_cliente, turno_agente = LLMContextAggregatorPair(
-        contexto, user_params=parametros_de_turno(limite)
-    )
-    tras_hablar = TrasHablar()
-
-    async def al_escalar(caso: dict):
-        persona.registrar(call_sid or conversacion, caso)
-        if call_sid and persona.configurada():
-            tras_hablar.programar(lambda: persona.transferir(call_sid))
+    turno_cliente, turno_agente = LLMContextAggregatorPair(contexto, user_params=parametros_de_turno(limite))
 
     async with AgenteOndo() as agente:
-        ondo = AgenteOndoVoz(agente, conversacion, como_chat, al_escalar, limite)
+        ondo = AgenteOndoVoz(agente, conversacion, cli.como_chat, limite)
         pipeline = Pipeline([
             transporte.input(),   # audio del cliente
             stt,                  # voz → texto
@@ -370,22 +342,25 @@ async def bot(runner_args: RunnerArguments):
             ondo,                 # el grafo de Ondo decide qué responder
             tts,                  # texto → voz
             transporte.output(),  # audio al cliente
-            tras_hablar,          # cuando termina de hablar: transferir, si toca
             turno_agente,         # guarda lo que el agente ha dicho
         ])
-        worker = PipelineWorker(pipeline, params=PipelineParams(enable_metrics=True))
+        worker = PipelineWorker(
+            pipeline,
+            params=PipelineParams(enable_metrics=True),
+            observers=observadores(traza=cli.traza, tiempos=cli.tiempos),
+        )
         runner = WorkerRunner(handle_sigint=runner_args.handle_sigint)
         await runner.add_workers(worker)
 
         @transporte.event_handler("on_client_connected")
         async def al_conectar(transport, client):
-            logger.info(f"Llamada conectada ({conversacion}, {'como en el chat' if como_chat else 'prompt de voz'}, "
-                        f"voz de {voz})")
+            logger.info(f"Conectado ({conversacion}, {'como en el chat' if cli.como_chat else 'prompt de voz'}, "
+                        f"voz de {cli.voz}, fin de turno por {FIN_DE_TURNO})")
             await ondo.queue_frame(LLMContextFrame(_contexto_saludo()))
 
         @transporte.event_handler("on_client_disconnected")
         async def al_colgar(transport, client):
-            logger.info("Llamada terminada")
+            logger.info("Conversación terminada")
             await runner.cancel()
 
         await runner.run()
@@ -405,10 +380,11 @@ if __name__ == "__main__":
                         help="el agente del chat tal cual: redacta para leer y no dice la frase de espera")
     parser.add_argument("--voz", choices=VOCES, default="openai",
                         help="quién genera la voz del agente: OpenAI (por defecto) o ElevenLabs")
+    parser.add_argument("--traza", action="store_true", help="imprime los frames de cada turno")
+    parser.add_argument("--tiempos", action="store_true", help="imprime en qué se va el tiempo de cada respuesta")
     elegida = parser.parse_known_args()[0].voz
     if faltan := falta_para_la_voz(elegida):
         sys.exit(f"Para usar la voz de {elegida} faltan en el .env: {', '.join(faltan)}")
     if voz_retirada(elegida):
         logger.warning(AVISO_VOZ_OPENAI)
-    persona.montar_rutas()
     main(parser)
