@@ -2,7 +2,7 @@
 
 ## La decisión principal
 
-El agente es un **grafo de LangGraph** con estado explícito, y no un agente ReAct que decide solo qué herramienta llamar. Motivo: Ondo tiene reglas que no pueden depender del modelo (confirmar antes de reservar, comprobar el titular, escalar la seguridad, el plazo y el importe de una devolución). Esas reglas van en código, en nodos y rutas que se pueden probar sin modelo.
+El turno lo organiza el código, con un estado explícito, y no un agente que decide solo qué herramienta llamar y cuándo. Motivo: Ondo tiene reglas que no pueden depender del modelo (confirmar antes de reservar, comprobar el titular, escalar la seguridad, el plazo y el importe de una devolución). Esas reglas van en código, en nodos y rutas que se pueden probar sin modelo.
 
 ## Un turno
 
@@ -10,7 +10,7 @@ El agente es un **grafo de LangGraph** con estado explícito, y no un agente ReA
 mensaje ─► interpretar ─► ruta (código) ─► nodo de la gestión ─► redactar ─► respuesta
 ```
 
-1. **interpretar** (modelo, salida estructurada con Pydantic): devuelve la interpretación de `intenciones.md`. Después, en código: la lista de palabras de peligro fuerza `seguridad`, se guardan los datos que trae el mensaje y se detecta el cambio de tema.
+1. **interpretar** (modelo, con salida estructurada y validada contra un esquema; nunca texto libre): devuelve la interpretación de `intenciones.md`. Después, en código: la lista de palabras de peligro fuerza `seguridad`, se guardan los datos que trae el mensaje y se detecta el cambio de tema.
 2. **ruta** (código), en este orden:
    1. si ya hay un caso abierto, `ya_escalado` (incluida la seguridad: no se abre otro caso);
    2. si es seguridad o pide una persona, `escalar`;
@@ -42,12 +42,18 @@ mensaje ─► interpretar ─► ruta (código) ─► nodo de la gestión ─�
 - Si el email no existe, se le dice y se le pide de nuevo. Al tercer intento fallido, a una persona.
 - Una vez identificado, sigue el flujo que pidió, sin volver a preguntar qué quería.
 
+## Requisitos técnicos
+
+- Proveedor de modelo intercambiable. Hoy el modelo de chat y los embeddings son de OpenAI. Cambiar a otro proveedor (Anthropic, Google) para el chat, o a otros embeddings, tiene que ser cambiar la configuración y una línea de código, sin tocar los nodos, los flujos ni los tests.
+- Un solo formato de mensajes. El historial usa el mismo tipo de mensaje en el estado, en las llamadas al modelo y en los tests.
+- Base de conocimiento con interfaz estándar. El almacén vectorial y los embeddings se pueden sustituir por otros sin cambiar la herramienta `buscar_conocimiento`.
+
 ## Cuando algo falla
 
 - Si una herramienta devuelve un error que no tiene tratamiento propio en su flujo, o lanza una excepción, el agente dice que no ha podido hacerlo ahora, no da la operación por hecha y ofrece pasar a una persona.
 - Si falla la llamada al modelo al interpretar o al redactar, se responde con un mensaje fijo en el idioma del cliente («Ahora mismo no puedo responder, inténtalo en unos minutos») y el estado no cambia.
 
-## Piezas fuera del grafo
+## Piezas fuera del flujo del turno
 
 - `agente/herramientas.py`: cliente MCP que arranca el servidor y expone `await llamar(nombre, **args)`. Los tests lo sustituyen por herramientas falsas con la misma firma.
 - `agente/agente.py`: una clase con `responder(conversacion, texto, canal)` que devuelve el texto, las opciones y el estado. Todos los canales la usan.

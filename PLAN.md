@@ -2,13 +2,13 @@
 
 Doce pasos, en este orden. Cada uno se le pide al asistente con el prompt de abajo, en una conversación nueva. Antes de cada paso, un commit (`git add -A && git commit -m "Antes del paso N"`), para poder volver atrás. Al terminar, la revisión del final.
 
-El orden importa: primero lo que no depende del modelo (datos, herramientas), luego el cerebro (estado y grafo), luego cada flujo, después la evaluación y los canales al final. Quien empieza por la voz depura dos cosas a la vez.
+El orden importa: primero lo que no depende del modelo (datos, herramientas), luego el cerebro (estado y flujo del turno), luego cada flujo, después la evaluación y los canales al final. Quien empieza por la voz depura dos cosas a la vez.
 
-## Paso 0 · Revisar las specs (modo Ask)
+## Paso 0 · Revisar las specs y elegir la arquitectura (modo Ask)
 
-> Lee AGENTS.md y todos los ficheros de specs/. No escribas código. Dime qué falta para poder construir el agente, qué se contradice entre ficheros y qué está tan abierto que tendrías que inventarlo. Cita el fichero y la frase en cada punto.
+> Lee AGENTS.md y todos los ficheros de specs/. No escribas código. Primero, dime qué falta para poder construir el agente, qué se contradice entre ficheros y qué está tan abierto que tendrías que inventarlo, citando el fichero y la frase. Después, propón la arquitectura: qué librerías de requirements.txt usarías para organizar el turno y guardar el estado, para llamar al modelo y para validar lo que devuelve, y qué regla de las specs justifica cada elección.
 
-Terminado: una lista de huecos. Corrígelos en las specs antes de seguir.
+Terminado: los huecos corregidos en las specs y la arquitectura aprobada. Pídele en modo Agent que la escriba en `specs/decisiones.md`, con la justificación de cada librería.
 
 ## Paso 1 · Datos simulados
 
@@ -24,13 +24,13 @@ Terminado: tests en verde y `python -m ondo_mcp.server` arranca y espera por std
 
 ## Paso 3 · Estado, interpretar, redactar y consola
 
-> Lee specs/arquitectura.md, specs/estado.md, specs/intenciones.md y specs/conversacion.md. Escribe agente/estado.py (estado e interpretación con Pydantic), agente/llm.py (interpretar y redactar, con un prompt para chat y otro para voz), agente/herramientas.py (cliente MCP), un grafo mínimo interpretar, saludar y redactar, agente/agente.py y canales/consola.py con --traza. Tests sin red con un modelo falso: la palabra «quemado» fuerza seguridad, el idioma se guarda, redactar recibe el borrador.
+> Lee specs/arquitectura.md, specs/estado.md, specs/intenciones.md, specs/conversacion.md y specs/decisiones.md. Escribe agente/estado.py (estado e interpretación validada con un esquema), agente/llm.py (interpretar y redactar, con un prompt para chat y otro para voz), agente/herramientas.py (cliente MCP), un flujo mínimo interpretar, saludar y redactar, agente/agente.py y canales/consola.py con --traza. Tests sin red con un modelo falso: la palabra «quemado» fuerza seguridad, el idioma se guarda, redactar recibe el borrador.
 
 Terminado: tests en verde y, con tu clave, `python -m canales.consola --traza` saluda, dice que es una IA y responde en el idioma del cliente.
 
-## Paso 4 · Grafo: identificar, reparar y escalar
+## Paso 4 · Flujo del turno: identificar, reparar y escalar
 
-> Lee specs/arquitectura.md y specs/escalado.md. Completa el grafo con la ruta en el orden de la spec y los nodos identificar, reparar, escalar y ya_escalado, con la herramienta anotar_caso. Tests primero: cada disparador de escalado, los tres intentos de reparar, que con un caso abierto la seguridad no abre otro, que el canal llega a escalar_a_humano y que ya_escalado en voz no pide escribir.
+> Lee specs/arquitectura.md y specs/escalado.md. Completa el flujo del turno con la ruta en el orden de la spec y los nodos identificar, reparar, escalar y ya_escalado, con la herramienta anotar_caso. Tests primero: cada disparador de escalado, los tres intentos de reparar, que con un caso abierto la seguridad no abre otro, que el canal llega a escalar_a_humano y que ya_escalado en voz no pide escribir.
 
 Terminado: tests en verde y, en la consola, «quiero hablar con una persona» abre un caso y una batería que huele a quemado da las instrucciones y un caso urgente.
 
@@ -66,13 +66,13 @@ Terminado: la suite se ejecuta de principio a fin. Anota cuántos escenarios pas
 
 ## Paso 10 · Telegram
 
-> Lee specs/canales.md, «Telegram». Escribe canales/telegram_bot.py con la clase del agente. Sin tocar el grafo.
+> Lee specs/canales.md, «Telegram». Escribe canales/telegram_bot.py con la clase del agente. Sin tocar el flujo del agente.
 
 Terminado: conversación real con tu bot, con botones.
 
 ## Paso 11 · Voz en el navegador
 
-> Lee specs/canales.md, «Voz», y specs/conversacion.md, «En voz». Escribe canales/voz.py con Pipecat. Usa la API de la versión instalada: busca los nombres en .venv/lib/python*/site-packages/pipecat/ antes de usarlos. Sin tocar el grafo.
+> Lee specs/canales.md, «Voz», y specs/conversacion.md, «En voz». Escribe canales/voz.py con Pipecat. Usa la API de la versión instalada: busca los nombres en .venv/lib/python*/site-packages/pipecat/ antes de usarlos. Sin tocar el flujo del agente.
 
 Terminado: conversación por voz en http://localhost:7860, con la frase de espera y la interrupción funcionando.
 

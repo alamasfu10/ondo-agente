@@ -1,6 +1,6 @@
 # Estado · lo que el agente recuerda entre turnos
 
-El estado es explícito: además de los mensajes, guarda quién es el cliente, qué quiere, qué datos tenemos y qué dato estamos esperando. Un checkpointer de LangGraph lo conserva entre turnos, con una conversación (`thread_id`) por chat de Telegram, por sesión de consola o por llamada de voz.
+El estado es explícito: además de los mensajes, guarda quién es el cliente, qué quiere, qué datos tenemos y qué dato estamos esperando. Se conserva entre turnos, separado por conversación: una por chat de Telegram, por sesión de consola o por llamada de voz.
 
 | Campo | Qué guarda |
 |---|---|

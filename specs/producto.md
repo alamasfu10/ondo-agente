@@ -21,7 +21,7 @@ Y pasa a una persona todo lo demás, con un resumen para que el cliente no repit
 - No vende, no cambia precios, no modifica pedidos ni direcciones y no hace llamadas salientes.
 - No da datos de un pedido a quien no es su titular.
 - No toma decisiones fuera de la política: una devolución fuera de plazo o de importe alto la decide una persona.
-- Fuera del alcance de este proyecto: conservar o borrar conversaciones, grabar llamadas con consentimiento y evitar reservas simultáneas del mismo hueco. El checkpointer en memoria basta.
+- Fuera del alcance de este proyecto: conservar o borrar conversaciones, grabar llamadas con consentimiento y evitar reservas simultáneas del mismo hueco. Guardar el estado en memoria basta.
 
 ## Cómo se mide
 

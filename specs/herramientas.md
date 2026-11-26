@@ -48,7 +48,7 @@ Identifica al cliente por email (sin distinguir mayúsculas), por número de ped
 RAG sencillo sobre `data/conocimiento/`:
 
 - Un fragmento por sección (`##`), con documento y sección como metadatos.
-- Embeddings `text-embedding-3-small` de OpenAI y un `InMemoryVectorStore` de LangChain, guardados en `data/.cache/` para no pagarlos en cada arranque.
+- Embeddings `text-embedding-3-small` de OpenAI y un almacén vectorial en memoria, guardados en `data/.cache/` para no pagarlos en cada arranque.
 - La caché se regenera cuando cambia algún documento (huella de su contenido) o el modelo de embeddings.
 - Devuelve hasta 3 fragmentos con similitud coseno de al menos 0,35 (`RAG_UMBRAL`): `{"resultados": [{documento, seccion, texto}]}`. Si ninguno lo supera, `{"resultados": [], "mensaje": "sin resultados"}`.
 - Los datos de pedidos, huecos y clientes nunca se buscan aquí: tienen sus herramientas.

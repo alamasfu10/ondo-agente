@@ -1,6 +1,6 @@
 # Canales · por dónde habla el cliente con el agente
 
-Los tres canales usan la misma clase `agente.responder(conversacion, texto, canal)`. El grafo no cambia por el canal: solo cambia cómo se redacta (`conversacion.md`) y cómo se muestran las opciones.
+Los tres canales usan la misma clase `agente.responder(conversacion, texto, canal)`. El flujo del agente no cambia por el canal: solo cambia cómo se redacta (`conversacion.md`) y cómo se muestran las opciones.
 
 ## Consola (paso 3 en adelante)
 

@@ -14,9 +14,9 @@ Fijo. No lo cambies ni añadas dependencias sin que te lo pidan.
 
 - Python 3.11 o superior, con un entorno virtual clásico en `.venv/`. Ejecuta Python siempre desde él, aunque la terminal no lo tenga activado: `.venv/bin/python` en macOS y Linux, `.venv\Scripts\python` en Windows. En este fichero, `python` significa ese Python.
 - Instalar: `python -m venv .venv` y después `python -m pip install -r requirements.txt`. Las versiones de `requirements.txt` son exactas y están probadas.
-- LangGraph para el grafo del agente (estado, nodos, rutas y checkpointer).
-- LangChain (`langchain-openai`) para hablar con el modelo de OpenAI. El modelo sale de `OPENAI_MODEL`.
-- Pydantic para todo lo que devuelve el modelo con estructura (`with_structured_output`).
+- El modelo es de OpenAI y sale de `OPENAI_MODEL`; si no está, `gpt-4.1-mini`.
+- Las librerías del agente (cómo se organiza el turno y se guarda el estado, cómo se llama al modelo, cómo se valida lo que devuelve) no están fijadas aquí. Las propones tú en el paso 0, solo entre las de `requirements.txt` y a partir de lo que piden las specs, con la regla de cada spec que justifica cada una. Cuando las apruebe, quedan escritas en `specs/decisiones.md` y son fijas.
+- La configuración (clave, modelo, `ONDO_HOY`, `ONDO_AHORA`) vive en `.env`. Todo punto de entrada (consola, Telegram, voz, servidor MCP, evaluación, generador de datos) la carga al arrancar con `load_dotenv` de `python-dotenv`, sin depender de que la terminal tenga las variables.
 - MCP (`mcp`, con `FastMCP`) para las herramientas, en un servidor propio que el agente arranca por stdio.
 - `python-telegram-bot` para Telegram y Pipecat para la voz en el navegador.
 - Si dudas del nombre o la firma de una función de una librería, búscalo en `.venv/lib/python*/site-packages/` en lugar de suponerlo. Las versiones instaladas pueden no coincidir con lo que recuerdas.
@@ -28,7 +28,7 @@ La creas tú a medida que avanzas:
 - `scripts/generar_datos.py`: genera los datos simulados (paso 1).
 - `data/`: los datos simulados y la base de conocimiento. `data/estado/` guarda lo que crea el agente (citas, devoluciones, casos) y no va a git.
 - `ondo_mcp/`: el servidor MCP con las herramientas (paso 2).
-- `agente/`: el estado, las llamadas al modelo, el grafo y un fichero por flujo en `agente/flujos/`.
+- `agente/`: el estado, las llamadas al modelo, el flujo del turno y un fichero por flujo de conversación en `agente/flujos/`.
 - `canales/`: consola, Telegram y voz.
 - `evaluacion/`: escenarios, cliente simulado, juez y la suite.
 - `tests/`: un fichero por pieza, `tests/test_<pieza>.py`.

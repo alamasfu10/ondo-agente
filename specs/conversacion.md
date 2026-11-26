@@ -37,5 +37,5 @@ El cliente le oye, no le lee. El texto se convierte en voz tal cual.
 En cada turno hay dos llamadas al modelo y, entre ellas, código:
 
 1. **Interpretar** el último mensaje (ver `intenciones.md`), con salida estructurada.
-2. El grafo decide en código qué hay que decir y deja un **borrador**: una instrucción («pide su email»), los datos que puede usar y las opciones.
+2. El código decide qué hay que decir y deja un **borrador**: una instrucción («pide su email»), los datos que puede usar y las opciones.
 3. **Redactar** convierte el borrador en el mensaje final, con el tono, el idioma y el formato del canal. Redactar no decide nada: no añade preguntas, datos ni opciones que no estén en el borrador.

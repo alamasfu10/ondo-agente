@@ -2,7 +2,7 @@
 
 ## Lo que devuelve interpretar
 
-Un objeto Pydantic con estos campos. El modelo lo rellena con salida estructurada; nunca se parsea texto libre.
+Un objeto con estos campos y estos tipos, validado contra su esquema. El modelo lo rellena con salida estructurada; nunca se parsea texto libre.
 
 | Campo | Tipo | Qué es |
 |---|---|---|

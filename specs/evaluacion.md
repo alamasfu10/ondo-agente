@@ -7,7 +7,7 @@ Los tests prueban cada pieza sin modelo. La evaluación prueba conversaciones co
 - `evaluacion/escenarios.json`: los escenarios de abajo.
 - `evaluacion/simulador.py`: un modelo que hace de cliente con su ficha, su objetivo y su estilo, en su idioma, y que termina la conversación cuando consigue su objetivo o se rinde. Como mucho 12 turnos.
 - `evaluacion/comprobaciones.py`: lo que se comprueba con datos, sin modelo: si hubo caso con una persona y con qué prioridad, cuántos casos, si se reservó una cita, si se creó una devolución, el idioma final y, en `pedido_ajeno`, que ningún mensaje del agente contiene el seguimiento, los productos ni la fecha de OND-10231.
-- `evaluacion/juez.py`: un modelo que lee la conversación y da «cumple», «no cumple» o «no aplica» en cada criterio, con una frase de evidencia. Salida estructurada con Pydantic.
+- `evaluacion/juez.py`: un modelo que lee la conversación y da «cumple», «no cumple» o «no aplica» en cada criterio, con una frase de evidencia. Salida estructurada, validada contra un esquema.
 - `evaluacion/suite.py`: ejecuta todos los escenarios (o `--solo <id>`), cada uno con su propia carpeta de estado (`ONDO_ESTADO`), e imprime una tabla y un resumen. Guarda las conversaciones en `evaluacion/salidas/`.
 
 ## Escenarios

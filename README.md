@@ -24,7 +24,7 @@ Un entorno vacío para construir con un asistente de IA (el chat de VS Code en m
 | `conversacion.md` | Cómo habla, en chat y en voz |
 | `intenciones.md` | Qué entiende de cada mensaje y los casos frontera |
 | `estado.md` | Qué recuerda entre turnos |
-| `arquitectura.md` | Por qué es un grafo y cómo es un turno |
+| `arquitectura.md` | Quién decide en cada turno y cómo es un turno |
 | `politicas.md` | Plazos, importes, horario: la fuente de todas las reglas |
 | `datos.md` | Los datos simulados y los casos con nombre |
 | `herramientas.md` | El contrato de las ocho herramientas MCP |
@@ -32,3 +32,4 @@ Un entorno vacío para construir con un asistente de IA (el chat de VS Code en m
 | `escalado.md` | Cuándo y cómo pasa a una persona |
 | `canales.md` | Consola, Telegram y voz |
 | `evaluacion.md` | Escenarios y criterios del juez |
+| `decisiones.md` | Las librerías elegidas en el paso 0 (lo escribe el asistente cuando las apruebas) |
